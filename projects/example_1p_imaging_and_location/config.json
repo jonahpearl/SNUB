@@ -1,0 +1,74 @@
+{
+    "bounds": [
+        500,
+        27000
+    ],
+    "vlines": {},
+    "rasters": [
+        {
+            "name": "Spatial occupancy",
+            "data_path": "spatial_occupancy.npy",
+            "labels": [
+                [
+                    0,
+                    "wall-left"
+                ],
+                [
+                    1,
+                    "wall-right"
+                ],
+                [
+                    2,
+                    "hut1-out"
+                ],
+                [
+                    3,
+                    "hut1-in"
+                ],
+                [
+                    4,
+                    "hut2-out"
+                ],
+                [
+                    5,
+                    "hut2-in"
+                ],
+                [
+                    6,
+                    "corner-1A"
+                ],
+                [
+                    7,
+                    "corner-1B"
+                ],
+                [
+                    8,
+                    "corner-2A"
+                ],
+                [
+                    9,
+                    "corner-2B"
+                ]
+            ],
+            "vmin": -1,
+            "vmax": 1,
+            "colormap": "binary",
+            "height_ratio": 1
+        },
+        {
+            "name": "Neural activity",
+            "data_path": "neural_data.npy",
+            "vmin": 0,
+            "vmax": 3,
+            "colormap": "viridis",
+            "height_ratio": 2
+        }
+    ],
+    "videos": [
+        {
+            "name": "IR bottom",
+            "video_path": "21_10_13_2shelter_C57GRIN68_1.rig0.bottom.ir.mp4",
+            "frame_index_path": "21_10_13_2shelter_C57GRIN68_1.rig0.bottom.ir.frame_index.npy"
+        }
+    ]
+}
