@@ -61,7 +61,8 @@
             "vmin": 0,
             "vmax": 3,
             "colormap": "viridis",
-            "height_ratio": 2
+            "height_ratio": 3,
+            "show_traces": true
         }
     ],
     "videos": [
