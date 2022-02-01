@@ -1,7 +1,7 @@
 {
     "bounds": [
-        500,
-        27000
+        16.666666666666668,
+        900.0
     ],
     "vlines": {},
     "rasters": [
@@ -9,51 +9,24 @@
             "name": "Spatial occupancy",
             "data_path": "spatial_occupancy.npy",
             "labels": [
-                [
-                    0,
-                    "wall-left"
-                ],
-                [
-                    1,
-                    "wall-right"
-                ],
-                [
-                    2,
-                    "hut1-out"
-                ],
-                [
-                    3,
-                    "hut1-in"
-                ],
-                [
-                    4,
-                    "hut2-out"
-                ],
-                [
-                    5,
-                    "hut2-in"
-                ],
-                [
-                    6,
-                    "corner-1A"
-                ],
-                [
-                    7,
-                    "corner-1B"
-                ],
-                [
-                    8,
-                    "corner-2A"
-                ],
-                [
-                    9,
-                    "corner-2B"
-                ]
+                "0",
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+                "7",
+                "8",
+                "9"
             ],
             "vmin": -1,
             "vmax": 1,
             "colormap": "binary",
-            "height_ratio": 1
+            "binsize": 0.03333333333333333,
+            "raster_height_ratio": 7,
+            "trace_height_ratio": 3,
+            "start_time": 0
         },
         {
             "name": "Neural activity",
@@ -61,15 +34,18 @@
             "vmin": 0,
             "vmax": 3,
             "colormap": "viridis",
-            "height_ratio": 3,
-            "show_traces": true
+            "show_traces": true,
+            "binsize": 0.03333333333333333,
+            "raster_height_ratio": 20,
+            "trace_height_ratio": 9,
+            "start_time": 0
         }
     ],
     "videos": [
         {
             "name": "IR bottom",
             "video_path": "21_10_13_2shelter_C57GRIN68_1.rig0.bottom.ir.mp4",
-            "frame_index_path": "21_10_13_2shelter_C57GRIN68_1.rig0.bottom.ir.frame_index.npy"
+            "timestamps_path": "21_10_13_2shelter_C57GRIN68_1.rig0.bottom.irtimestamps.npy"
         }
     ]
 }
