@@ -45,7 +45,7 @@
         {
             "name": "IR bottom",
             "video_path": "21_10_13_2shelter_C57GRIN68_1.rig0.bottom.ir.mp4",
-            "timestamps_path": "21_10_13_2shelter_C57GRIN68_1.rig0.bottom.irtimestamps.npy"
+            "timestamps_path": "21_10_13_2shelter_C57GRIN68_1.rig0.bottom.timestamps.npy"
         }
     ]
 }
