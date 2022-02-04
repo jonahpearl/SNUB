@@ -1,0 +1,7 @@
+snub
+====
+
+.. toctree::
+   :maxdepth: 4
+
+   snub
