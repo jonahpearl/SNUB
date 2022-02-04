@@ -154,7 +154,8 @@
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Interface</a></li>
 </ul>
 
 </div>
@@ -221,20 +222,7 @@
 
 
 
-
-<span class="c1"># class Slider(QSlider):</span>
-<span class="c1">#     def mousePressEvent(self, e):</span>
-<span class="c1">#         if e.button() == Qt.LeftButton:</span>
-<span class="c1">#             x = e.pos().x()</span>
-<span class="c1">#             value = (self.maximum() - self.minimum()) * x / self.width() + self.minimum()</span>
-<span class="c1">#             self.setValue(np.around(value))</span>
-<span class="c1">#         else:</span>
-<span class="c1">#             return super().mousePressEvent(self, e)</span>
-
-
-
-
-<div class="viewcode-block" id="ProjectTab"><a class="viewcode-back" href="../../../index.html#snub.gui.main.ProjectTab">[docs]</a><span class="k">class</span> <span class="nc">ProjectTab</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
+<div class="viewcode-block" id="ProjectTab"><a class="viewcode-back" href="../../../api.html#snub.gui.main.ProjectTab">[docs]</a><span class="k">class</span> <span class="nc">ProjectTab</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
     <span class="sd">"""</span>
 <span class="sd">    Return the most important thing about a person.</span>
 <span class="sd">    Parameters</span>
@@ -317,24 +305,26 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">speed_slider</span><span class="o">.</span><span class="n">setTickInterval</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">speed_slider</span><span class="o">.</span><span class="n">setMaximumWidth</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
 
- 
         <span class="n">buttons</span> <span class="o">=</span> <span class="n">QHBoxLayout</span><span class="p">()</span>
         <span class="n">buttons</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">buttons</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">play_button</span><span class="p">)</span>
         <span class="n">buttons</span><span class="o">.</span><span class="n">addSpacing</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-        <span class="n">buttons</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">QLabel</span><span class="p">(</span><span class="s1">'Playback Speed:'</span><span class="p">))</span>
+        <span class="n">label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s1">'Playback Speed:'</span><span class="p">)</span>
+        <span class="n">label</span><span class="o">.</span><span class="n">setFixedHeight</span><span class="p">(</span><span class="mi">25</span><span class="p">)</span>
+        <span class="n">buttons</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
         <span class="n">buttons</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">speed_slider</span><span class="p">)</span>
         <span class="n">buttons</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">speed_label</span><span class="p">)</span>
         <span class="n">buttons</span><span class="o">.</span><span class="n">addSpacing</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
         <span class="n">buttons</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">track_playhead_checkbox</span><span class="p">)</span>
-        <span class="n">buttons</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">QLabel</span><span class="p">(</span><span class="s1">'Track Playhead'</span><span class="p">))</span>
+        <span class="n">label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s1">'Track Playhead'</span><span class="p">)</span>
+        <span class="n">label</span><span class="o">.</span><span class="n">setFixedHeight</span><span class="p">(</span><span class="mi">25</span><span class="p">)</span>
+        <span class="n">buttons</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
         <span class="n">buttons</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
         <span class="n">layout</span> <span class="o">=</span> <span class="n">QVBoxLayout</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">splitter</span><span class="p">)</span>
         <span class="n">layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">buttons</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">change_layout_mode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layout_mode</span><span class="p">)</span>
-
 
     <span class="k">def</span> <span class="nf">update_track_playhead</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">checkstate</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">track_playhead</span> <span class="o">=</span> <span class="n">checkstate</span>
@@ -446,7 +436,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">playing</span> <span class="o">=</span> <span class="kc">False</span></div>
 
 
-<div class="viewcode-block" id="MainWindow"><a class="viewcode-back" href="../../../index.html#snub.gui.main.MainWindow">[docs]</a><span class="k">class</span> <span class="nc">MainWindow</span><span class="p">(</span><span class="n">QMainWindow</span><span class="p">):</span>
+<div class="viewcode-block" id="MainWindow"><a class="viewcode-back" href="../../../api.html#snub.gui.main.MainWindow">[docs]</a><span class="k">class</span> <span class="nc">MainWindow</span><span class="p">(</span><span class="n">QMainWindow</span><span class="p">):</span>
     <span class="sd">'''</span>
 <span class="sd">    Main window that contains menu bar and tab widget. Contains methods for</span>
 <span class="sd">    opening, reloading, and closing project tabs.</span>
@@ -553,7 +543,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">addTab</span><span class="p">(</span><span class="n">project_tab</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">setCurrentWidget</span><span class="p">(</span><span class="n">project_tab</span><span class="p">)</span>
 
-<div class="viewcode-block" id="MainWindow.getExistingDirectories"><a class="viewcode-back" href="../../../index.html#snub.gui.main.MainWindow.getExistingDirectories">[docs]</a>    <span class="k">def</span> <span class="nf">getExistingDirectories</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="MainWindow.getExistingDirectories"><a class="viewcode-back" href="../../../api.html#snub.gui.main.MainWindow.getExistingDirectories">[docs]</a>    <span class="k">def</span> <span class="nf">getExistingDirectories</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">"""</span>
 <span class="sd">        Workaround for selecting multiple directories</span>
 <span class="sd">        adopted from http://www.qtcentre.org/threads/34226-QFileDialog-select-multiple-directories?p=158482#post158482</span>

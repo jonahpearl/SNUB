@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Installation" href="installation.html" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Tutorial" href="setup.html" />
 
     <meta name="generator" content="sphinx-4.4.0, furo 2022.01.02"/>
         <title>snub documentation</title>
@@ -155,9 +155,22 @@
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage.html">Interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="setup.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html#project-structure">Project Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html#example-projects">Example Projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html#config-options">Config options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html#time-series-data">Time=series Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html#d-point-clouds">2D Point Clouds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html#video">Video</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html#d-skeletons-and-meshes">3D Skeletons and Meshes</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html#overview">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html#tracks">Tracks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html#panels">Panels</a></li>
+</ul>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="api.html">Browser API</a></li>
 </ul>
 
@@ -187,29 +200,85 @@
         <article role="main">
           <section id="systems-neuro-browser">
 <h1>Systems Neuro Browser<a class="headerlink" href="#systems-neuro-browser" title="Permalink to this headline">¶</a></h1>
-<p><em>SNUB is a user-interface for exploring time-series data in systems neuroscience.</em></p>
+<p><strong>SNUB is a visual interface for time-series data in systems neuroscience.</strong> Using a set of linked views, users can explore relationships between raw video, animal pose, behavior annotations, and neural activity. Some example use cases are shown below below, followed by detailed</p>
+<section id="use-cases">
+<h2>Use Cases<a class="headerlink" href="#use-cases" title="Permalink to this headline">¶</a></h2>
 <img alt="_images/screen_capture2.gif" src="_images/screen_capture2.gif"/>
-<section id="contents">
-<h2>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="loading-data">
+<h2>Loading Data<a class="headerlink" href="#loading-data" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage.html">Interface</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#overview">Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#tracks">Tracks</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#panels">Panels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html#project-structure">Project Structure</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="setup.html#config-file">Config file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="setup.html#temporal-alignment">Temporal alignment</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="setup.html">Tutorial</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="setup.html#project-structure">Project Structure</a></li>
-<li class="toctree-l2"><a class="reference internal" href="setup.html#example-projects">Example Projects</a></li>
-<li class="toctree-l2"><a class="reference internal" href="setup.html#config-options">Config options</a></li>
-<li class="toctree-l2"><a class="reference internal" href="setup.html#time-series-data">Time-series Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="setup.html#d-point-clouds">2D Point Clouds</a></li>
-<li class="toctree-l2"><a class="reference internal" href="setup.html#video">Video</a></li>
-<li class="toctree-l2"><a class="reference internal" href="setup.html#d-skeletons-and-meshes">3D Skeletons and Meshes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html#example-projects">Example Projects</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="setup.html#behavior-video-and-electrophysiology">Behavior video and electrophysiology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="setup.html#d-mouse-model-and-pose-manifold">3D mouse model and pose manifold</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html#config-options">Config options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html#time-series-data">Time=series Data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="setup.html#use-cases">Use cases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="setup.html#data-format">Data format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="setup.html#parameters">Parameters</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html#d-point-clouds">2D Point Clouds</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="setup.html#id1">Use cases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="setup.html#id2">Data format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="setup.html#id3">Parameters</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html#video">Video</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="setup.html#id4">Data format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="setup.html#id5">Parameters</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html#d-skeletons-and-meshes">3D Skeletons and Meshes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="setup.html#id6">Data format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="setup.html#id7">Parameters</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="browser-guide">
+<h2>Browser Guide<a class="headerlink" href="#browser-guide" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html#overview">Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#opening-projects">Opening Projects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#tracks-and-panels">Tracks and Panels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#making-selections">Making selections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#adjusting-the-layout">Adjusting the Layout</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html#tracks">Tracks</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#raster">Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#trace">Trace</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html#panels">Panels</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#video">Video</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#scatter">Scatter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#mesh">Mesh</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="developer-api">
+<h2>Developer API<a class="headerlink" href="#developer-api" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="api.html">Browser API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="api.html#module-snub.gui.main">Main</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#module-snub.gui.stacks">Stacks</a></li>
@@ -228,12 +297,12 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="installation.html">
+          <a class="next-page" href="setup.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Installation</div>
+                <div class="title">Tutorial</div>
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -265,7 +334,11 @@
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Systems Neuro Browser</a><ul>
-<li><a class="reference internal" href="#contents">Contents</a></li>
+<li><a class="reference internal" href="#use-cases">Use Cases</a></li>
+<li><a class="reference internal" href="#installation">Installation</a></li>
+<li><a class="reference internal" href="#loading-data">Loading Data</a></li>
+<li><a class="reference internal" href="#browser-guide">Browser Guide</a></li>
+<li><a class="reference internal" href="#developer-api">Developer API</a></li>
 </ul>
 </li>
 </ul>

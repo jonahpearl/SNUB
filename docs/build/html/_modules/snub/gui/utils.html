@@ -156,8 +156,6 @@
   <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../setup.html">Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../api.html">Browser API</a></li>
 </ul>
 
 </div>
@@ -347,7 +345,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">update_layout</span><span class="p">()</span>
 
 
-    <span class="k">def</span> <span class="nf">toggle_visiblity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">toggle_visiblity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_visible</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">save_current_size</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">is_visible</span> <span class="o">=</span> <span class="kc">False</span>
