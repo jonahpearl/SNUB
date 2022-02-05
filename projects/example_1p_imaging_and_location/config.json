@@ -4,7 +4,14 @@
         900.0
     ],
     "vlines": {},
-    "rasters": [
+    "videos": [
+        {
+            "name": "IR bottom",
+            "video_path": "21_10_13_2shelter_C57GRIN68_1.rig0.bottom.ir.mp4",
+            "timestamps_path": "21_10_13_2shelter_C57GRIN68_1.rig0.bottom.timestamps.npy"
+        }
+    ],
+    "heatmaps": [
         {
             "name": "Spatial occupancy",
             "data_path": "spatial_occupancy.npy",
@@ -39,13 +46,6 @@
             "raster_height_ratio": 20,
             "trace_height_ratio": 9,
             "start_time": 0
-        }
-    ],
-    "videos": [
-        {
-            "name": "IR bottom",
-            "video_path": "21_10_13_2shelter_C57GRIN68_1.rig0.bottom.ir.mp4",
-            "timestamps_path": "21_10_13_2shelter_C57GRIN68_1.rig0.bottom.timestamps.npy"
         }
     ]
 }

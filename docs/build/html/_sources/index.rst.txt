@@ -14,10 +14,35 @@ Use Cases
 Installation
 ------------
 
+Install `Anaconda <https://docs.anaconda.com/anaconda/install/index.html>`_ or `Miniconda <https://docs.conda.io/en/latest/miniconda.html>`_. Create an environment with python≥3.7 and pip install SNUB. 
+
+.. code-block:: console
+
+   conda create -n snub python=3.7
+   conda activate snub
+   pip install -U git+https://github.com/calebweinreb/SNUB
+
+
+.. note:: 
+
+   If you have macOS Big Sur, opengl-based features such as the 3D mesh view `will only work after <https://github.com/PixarAnimationStudios/USD/issues/1372#issuecomment-716925973>`_ if you modify the file::
+
+      ~/miniconda3/envs/snub/lib/python3.7/site-packages/OpenGL/platform/ctypesloader.py
+
+   by replacing the line::
+
+      fullName = util.find_library( name )
+
+   with::
+
+      fullName = '/System/Library/Frameworks/OpenGL.framework/OpenGL'
+
 
 
 Loading Data
 ------------
+
+To load your own data 
 
 .. toctree::
    :maxdepth: 2
@@ -25,8 +50,8 @@ Loading Data
    setup
 
 
-Browser Guide
--------------
+Browser
+-------
 
 .. toctree::
    :maxdepth: 2

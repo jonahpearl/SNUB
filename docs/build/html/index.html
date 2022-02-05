@@ -207,9 +207,31 @@
 </section>
 <section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>Install <a class="reference external" href="https://docs.anaconda.com/anaconda/install/index.html">Anaconda</a> or <a class="reference external" href="https://docs.conda.io/en/latest/miniconda.html">Miniconda</a>. Create an environment with python≥3.7 and pip install SNUB.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">conda create -n snub python=3.7</span>
+<span class="go">conda activate snub</span>
+<span class="go">pip install -U git+https://github.com/calebweinreb/SNUB</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you have macOS Big Sur, opengl-based features such as the 3D mesh view <a class="reference external" href="https://github.com/PixarAnimationStudios/USD/issues/1372#issuecomment-716925973">will only work after</a> if you modify the file:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">~/</span><span class="n">miniconda3</span><span class="o">/</span><span class="n">envs</span><span class="o">/</span><span class="n">snub</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="mf">.7</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">OpenGL</span><span class="o">/</span><span class="n">platform</span><span class="o">/</span><span class="n">ctypesloader</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>by replacing the line:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fullName</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">find_library</span><span class="p">(</span> <span class="n">name</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p>with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fullName</span> <span class="o">=</span> <span class="s1">'/System/Library/Frameworks/OpenGL.framework/OpenGL'</span>
+</pre></div>
+</div>
+</div>
 </section>
 <section id="loading-data">
 <h2>Loading Data<a class="headerlink" href="#loading-data" title="Permalink to this headline">¶</a></h2>
+<p>To load your own data</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="setup.html">Tutorial</a></li>
@@ -249,8 +271,8 @@
 </ul>
 </div>
 </section>
-<section id="browser-guide">
-<h2>Browser Guide<a class="headerlink" href="#browser-guide" title="Permalink to this headline">¶</a></h2>
+<section id="browser">
+<h2>Browser<a class="headerlink" href="#browser" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Interface</a></li>
@@ -337,7 +359,7 @@
 <li><a class="reference internal" href="#use-cases">Use Cases</a></li>
 <li><a class="reference internal" href="#installation">Installation</a></li>
 <li><a class="reference internal" href="#loading-data">Loading Data</a></li>
-<li><a class="reference internal" href="#browser-guide">Browser Guide</a></li>
+<li><a class="reference internal" href="#browser">Browser</a></li>
 <li><a class="reference internal" href="#developer-api">Developer API</a></li>
 </ul>
 </li>
