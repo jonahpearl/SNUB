@@ -154,8 +154,22 @@
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../setup.html">Project Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../setup.html#example-projects">Example Projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../setup.html#config-options">Config options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../setup.html#time-series-data">Time=series Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../setup.html#d-point-clouds">2D Point Clouds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../setup.html#video">Video</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../setup.html#d-skeletons-and-meshes">3D Skeletons and Meshes</a></li>
+</ul>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html#overview">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html#tracks">Tracks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html#panels">Panels</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">Browser API</a></li>
 </ul>
 
 </div>
@@ -345,15 +359,15 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="s1">'track_playhead'</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span> <span class="n">config</span><span class="p">[</span><span class="s1">'track_playhead'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="s1">'track_props'</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span> <span class="n">config</span><span class="p">[</span><span class="s1">'track_props'</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="s1">'panel_props'</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span> <span class="n">config</span><span class="p">[</span><span class="s1">'panel_props'</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="s1">'spike_rasters'</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span> <span class="n">config</span><span class="p">[</span><span class="s1">'spike_rasters'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="s1">'spikeplots'</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span> <span class="n">config</span><span class="p">[</span><span class="s1">'spikeplots'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="s1">'scatters'</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span> <span class="n">config</span><span class="p">[</span><span class="s1">'scatters'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="s1">'rasters'</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span> <span class="n">config</span><span class="p">[</span><span class="s1">'rasters'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="s1">'heatmaps'</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span> <span class="n">config</span><span class="p">[</span><span class="s1">'heatmaps'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="s1">'videos'</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span> <span class="n">config</span><span class="p">[</span><span class="s1">'videos'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="s1">'meshes'</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span> <span class="n">config</span><span class="p">[</span><span class="s1">'meshes'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="s1">'vlines'</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span> <span class="n">config</span><span class="p">[</span><span class="s1">'vlines'</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="k">for</span> <span class="n">widget_name</span><span class="p">,</span> <span class="n">requred_keys</span> <span class="ow">in</span> <span class="p">{</span>
-            <span class="s1">'rasters'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'data_path'</span><span class="p">,</span> <span class="s1">'binsize'</span><span class="p">],</span>
+            <span class="s1">'heatmaps'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'data_path'</span><span class="p">,</span> <span class="s1">'binsize'</span><span class="p">],</span>
             <span class="s1">'videos'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'video_path'</span><span class="p">,</span> <span class="s1">'timestamps_path'</span><span class="p">],</span>
             <span class="s1">'meshes'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'data_path'</span><span class="p">,</span> <span class="s1">'faces_path'</span><span class="p">,</span> <span class="s1">'timestamps_path'</span><span class="p">]</span>
         <span class="p">}</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -520,6 +534,8 @@
         <span class="n">error_directories</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">project_dir</span> <span class="ow">in</span> <span class="n">project_directories</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">project_dir</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># if project_dir.endswith('config.json'):</span>
+                <span class="c1">#     project_dir = os.path.dirname(project_dir)</span>
                 <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_dir</span><span class="p">,</span><span class="s1">'config.json'</span><span class="p">)):</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">load_project</span><span class="p">(</span><span class="n">project_dir</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span> <span class="n">error_directories</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">project_dir</span><span class="p">)</span>
@@ -529,6 +545,7 @@
 
     <span class="k">def</span> <span class="nf">reload_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">current_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">currentIndex</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">current_index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span> <span class="k">return</span> <span class="c1"># no tab </span>
         <span class="n">current_tab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">currentWidget</span><span class="p">()</span>
         <span class="n">project_dir</span> <span class="o">=</span> <span class="n">current_tab</span><span class="o">.</span><span class="n">project_directory</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">close_tab</span><span class="p">(</span><span class="n">current_index</span><span class="p">)</span>
@@ -553,7 +570,7 @@
         <span class="n">dlg</span><span class="o">.</span><span class="n">setOption</span><span class="p">(</span><span class="n">dlg</span><span class="o">.</span><span class="n">DontUseNativeDialog</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
         <span class="n">dlg</span><span class="o">.</span><span class="n">setOption</span><span class="p">(</span><span class="n">dlg</span><span class="o">.</span><span class="n">HideNameFilterDetails</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
         <span class="n">dlg</span><span class="o">.</span><span class="n">setFileMode</span><span class="p">(</span><span class="n">dlg</span><span class="o">.</span><span class="n">Directory</span><span class="p">)</span>
-        <span class="n">dlg</span><span class="o">.</span><span class="n">setOption</span><span class="p">(</span><span class="n">dlg</span><span class="o">.</span><span class="n">ShowDirsOnly</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="n">dlg</span><span class="o">.</span><span class="n">setOption</span><span class="p">(</span><span class="n">dlg</span><span class="o">.</span><span class="n">ShowDirsOnly</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
         <span class="n">dlg</span><span class="o">.</span><span class="n">findChildren</span><span class="p">(</span><span class="n">QListView</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">setSelectionMode</span><span class="p">(</span><span class="n">QAbstractItemView</span><span class="o">.</span><span class="n">ExtendedSelection</span><span class="p">)</span>
         <span class="n">dlg</span><span class="o">.</span><span class="n">findChildren</span><span class="p">(</span><span class="n">QTreeView</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">setSelectionMode</span><span class="p">(</span><span class="n">QAbstractItemView</span><span class="o">.</span><span class="n">ExtendedSelection</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">dlg</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span> <span class="o">==</span> <span class="n">QDialog</span><span class="o">.</span><span class="n">Accepted</span><span class="p">:</span>
