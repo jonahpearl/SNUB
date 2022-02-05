@@ -1,0 +1,65 @@
+{
+    "bounds": [
+        0,
+        140
+    ],
+
+    "rasters": [
+        {
+            "name": "Joint Angles",
+            "data_path": "joint_angles.npy",
+            "vmin": -3,
+            "vmax": 3,
+            "colormap": "seismic",
+            "show_traces": true,
+            "binsize": 0.03333333333333333,
+            "raster_height_ratio": 20,
+            "trace_height_ratio": 9,
+            "start_time": 0
+        },
+
+        {
+            "name": "PCA Projection",
+            "data_path": "pca_projection.npy",
+            "vmin": 0,
+            "vmax": 3,
+            "colormap": "viridis",
+            "show_traces": true,
+            "binsize": 0.03333333333333333,
+            "raster_height_ratio": 20,
+            "trace_height_ratio": 9,
+            "start_time": 0
+        }
+    ],
+    
+    "videos": [
+        {
+            "name": "IR bottom",
+            "video_path": "bottom.mp4",
+            "timestamps_path": "timestamps.npy"
+        },
+
+        {
+            "name": "IR side1",
+            "video_path": "side1.mp4",
+            "timestamps_path": "timestamps.npy"
+        }
+    ],
+    
+    "meshes": [
+        {
+            "name": "Armo",
+            "data_path": "pose_vis.h5",
+            "faces_path": "mesh_faces.npy",
+            "timestamps_path": "timestamps.npy"
+        }
+    ],
+
+    "scatters": [
+        {
+            "name": "UMAP Embedding",
+            "data_path": "umap_embedding.npy",
+            "pointsize": 3
+        } 
+    ]
+}
