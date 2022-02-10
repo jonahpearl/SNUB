@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>snub.io.video &mdash; snub  documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/custom.css" type="text/css" />
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> snub
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">snub.io</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">snub</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>snub.io.video</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for snub.io.video</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">imageio</span>
+<span class="kn">import</span> <span class="nn">tqdm</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+
+<div class="viewcode-block" id="azure_ir_transform"><a class="viewcode-back" href="../../../api.html#snub.io.video.azure_ir_transform">[docs]</a><span class="k">def</span> <span class="nf">azure_ir_transform</span><span class="p">(</span><span class="n">input_image</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Apply the following transformation to better visualize high-dynamic-range </span>
+<span class="sd">    infrared video (used in :py:func:`snub.io.video.transform_azure_ir_stream`)</span>
+<span class="sd">    This method is useful for viewing the infrared stream output by</span>
+<span class="sd">    an `Azure Kinect (K4A) depth sensor &lt;https://github.com/microsoft/Azure-Kinect-Sensor-SDK&gt;`_. ::</span>
+
+<span class="sd">        transformed_image = log(input_image)*322 - 350</span>
+<span class="sd">    </span>
+
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    input_image: ndarray</span>
+<span class="sd">        Input image as a numpy array (can be any shape)</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    transformed_image: ndarray </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">transformed_image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="n">input_image</span><span class="p">)</span><span class="o">+</span><span class="mi">100</span><span class="p">)</span><span class="o">*</span><span class="mi">70</span><span class="o">-</span><span class="mi">350</span>
+    <span class="n">transformed_image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">transformed_image</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">transformed_image</span></div>
+
+
+<div class="viewcode-block" id="transform_azure_ir_stream"><a class="viewcode-back" href="../../../api.html#snub.io.video.transform_azure_ir_stream">[docs]</a><span class="k">def</span> <span class="nf">transform_azure_ir_stream</span><span class="p">(</span><span class="n">inpath</span><span class="p">,</span> <span class="n">outpath</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">num_frames</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert a 16bit monochrome video to an 8bit mp4 video that </span>
+<span class="sd">    can be viewed within SNUB. Each frame is transformed using </span>
+<span class="sd">    :py:func:`snub.io.video.azure_ir_transform` and the output </span>
+<span class="sd">    video is compressed using ffmpeg. This method is useful for </span>
+<span class="sd">    viewing the infrared stream output by an </span>
+<span class="sd">    `Azure Kinect (K4A) depth sensor &lt;https://github.com/microsoft/Azure-Kinect-Sensor-SDK&gt;`_.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    inpath : str </span>
+<span class="sd">        Path to the input video</span>
+<span class="sd">        </span>
+<span class="sd">    outpath: str, default=None</span>
+<span class="sd">        Path where the output video will be written (must end in &#39;.mp4&#39;). </span>
+<span class="sd">        If ``outpath=None``, then the output video will have the same location </span>
+<span class="sd">        as ``inpath`` with the file extension switched to ``.mp4``.</span>
+<span class="sd">        </span>
+<span class="sd">    num_frames: int, default=None</span>
+<span class="sd">        Number of frames to convert. By default the full video is converted.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">inpath</span><span class="p">):</span> 
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;The video </span><span class="si">{}</span><span class="s1"> does not exist&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">inpath</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">outpath</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> 
+        <span class="n">outpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">inpath</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;.mp4&#39;</span>
+        <span class="k">if</span> <span class="n">outpath</span><span class="o">==</span><span class="n">inpath</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Cannot overwrite the input video. Make sure the input video does not end in .mp4 or specify an alternative `outpath`&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">inpath</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;.mp4&#39;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;`outpath` must end with .mp4&#39;</span><span class="p">)</span>
+        
+    <span class="n">reader</span> <span class="o">=</span> <span class="n">imageio</span><span class="o">.</span><span class="n">get_reader</span><span class="p">(</span><span class="n">inpath</span><span class="p">,</span> <span class="n">pixelformat</span><span class="o">=</span><span class="s1">&#39;gray16&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;uint16&#39;</span><span class="p">)</span>
+    <span class="n">num_frames_in_video</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">count_frames</span><span class="p">()</span>
+    <span class="n">fps</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">get_meta_data</span><span class="p">()[</span><span class="s1">&#39;fps&#39;</span><span class="p">]</span>
+    
+    <span class="k">if</span> <span class="n">num_frames</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">num_frames</span> <span class="o">=</span> <span class="n">num_frames_in_video</span>
+    <span class="k">elif</span> <span class="n">num_frames</span> <span class="o">&gt;</span> <span class="n">num_frames_in_video</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;`num_frames=</span><span class="si">{}</span><span class="s1"> but there are only </span><span class="si">{}</span><span class="s1"> frames in the input video&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">num_frames</span><span class="p">,</span> <span class="n">num_frames_in_video</span><span class="p">))</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Saving transformed video to &#39;</span><span class="o">+</span><span class="n">outpath</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">imageio</span><span class="o">.</span><span class="n">get_writer</span><span class="p">(</span><span class="n">outpath</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="n">fps</span><span class="p">)</span> <span class="k">as</span> <span class="n">writer</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="o">.</span><span class="n">trange</span><span class="p">(</span><span class="n">num_frames</span><span class="p">):</span>
+            <span class="n">img</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+            <span class="n">img</span> <span class="o">=</span> <span class="n">azure_ir_transform</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+            <span class="n">writer</span><span class="o">.</span><span class="n">append_data</span><span class="p">(</span><span class="n">img</span><span class="p">)</span></div>
+
+        
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Caleb Weinreb.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

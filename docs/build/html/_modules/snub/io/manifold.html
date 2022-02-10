@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>snub.io.manifold &mdash; snub  documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/custom.css" type="text/css" />
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> snub
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">snub.io</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">snub</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>snub.io.manifold</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for snub.io.manifold</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<div class="viewcode-block" id="sort"><a class="viewcode-back" href="../../../api.html#snub.io.manifold.sort">[docs]</a><span class="k">def</span> <span class="nf">sort</span><span class="p">(</span>
+    <span class="n">data</span><span class="p">,</span> 
+    <span class="n">method</span><span class="o">=</span><span class="s1">&#39;rastermap&#39;</span><span class="p">,</span> 
+    <span class="n">options</span><span class="o">=</span><span class="p">{}</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Linearly sort neurons in order to group those with similar activity</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    method: {&#39;rastermap&#39;}</span>
+<span class="sd">        Method to use for sorting (currently only rastermap is implemented)</span>
+
+<span class="sd">    options: dict, default={}</span>
+<span class="sd">        Sorting method-specific options.</span>
+
+<span class="sd">        &#39;rastermap&#39;</span>
+<span class="sd">            ``options`` will be passed as keyword arguments when initializing</span>
+<span class="sd">            `rastermap.mapping.Rastermap &lt;https://github.com/MouseLand/rastermap/blob/40867ce9a8b2850d76483890740c0dc10d6cb413/rastermap/mapping.py#L531&gt;`_</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">valid_sort_methods</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;rastermap&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">valid_sort_methods</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="n">method</span><span class="o">+</span><span class="s1">&#39; is not a valid sort method. Must be one of &#39;</span><span class="o">+</span><span class="nb">repr</span><span class="p">(</span><span class="n">valid_sort_methods</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">method</span><span class="o">==</span><span class="s1">&#39;rastermap&#39;</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Computing row order with rastermap&#39;</span><span class="p">)</span>
+        <span class="kn">from</span> <span class="nn">rastermap</span> <span class="kn">import</span> <span class="n">mapping</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">mapping</span><span class="o">.</span><span class="n">Rastermap</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">heatmap_data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">embedding</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span></div>
+
+    
+<div class="viewcode-block" id="firing_rates"><a class="viewcode-back" href="../../../api.html#snub.io.manifold.firing_rates">[docs]</a><span class="k">def</span> <span class="nf">firing_rates</span><span class="p">(</span>
+    <span class="n">spike_times</span><span class="p">,</span> 
+    <span class="n">spike_labels</span><span class="p">,</span> 
+    <span class="n">window_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> 
+    <span class="n">window_step</span><span class="o">=</span><span class="mf">0.02</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convert spike tikes to firing rates using a sliding window</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    spike_times : ndarray</span>
+<span class="sd">        Spike times (in seconds) for all units. The source of each spike is</span>
+<span class="sd">        input separately using ``spike_labels``</span>
+<span class="sd">        </span>
+<span class="sd">    spike_labels: ndarray</span>
+<span class="sd">        The source/label for each spike in ``spike_times``. The maximum</span>
+<span class="sd">        value of this array determines the number of rows in the heatmap.</span>
+<span class="sd">    </span>
+<span class="sd">    window_size: float, default=0.2</span>
+<span class="sd">        Length (in seconds) of the sliding window used to calculate firing rates</span>
+<span class="sd">        </span>
+<span class="sd">    window_step: float, default=0.02</span>
+<span class="sd">        Step-size (in seconds) between each window used to calculate firing rates</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    firing_rates: ndarray</span>
+<span class="sd">        Array of firing rates, where rows units and columns are sliding </span>
+<span class="sd">        window locations. ``firing_rates`` has shape ``(N,M)`` where::</span>
+
+<span class="sd">            N = max(spike_labels)+1</span>
+
+<span class="sd">            M = (max(spike_times)-min(spike_times))/binsize</span>
+
+<span class="sd">    start_time, float</span>
+<span class="sd">        The time (in seconds) corresponding to the left-boundary</span>
+<span class="sd">        of the first window in ``firing_rates``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># round spikes to window_step and factor our start time</span>
+    <span class="n">spike_times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">spike_times</span><span class="o">/</span><span class="n">window_step</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">spike_times</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+    <span class="n">spike_times</span> <span class="o">=</span> <span class="n">spike_times</span> <span class="o">-</span> <span class="n">start_time</span>
+    
+    <span class="c1"># create heatmap of spike counts for each window_step-sized bin</span>
+    <span class="n">heatmap</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">spike_labels</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">spike_times</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="n">heatmap</span><span class="p">,</span> <span class="p">(</span><span class="n">spike_labels</span><span class="p">,</span> <span class="n">spike_times</span><span class="p">),</span> <span class="mi">1</span><span class="o">/</span><span class="n">window_step</span><span class="p">)</span>
+    
+    <span class="c1"># use convolution to get sliding window counts</span>
+    <span class="n">kernel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">window_size</span><span class="o">//</span><span class="n">window_step</span><span class="p">))</span><span class="o">/</span><span class="p">(</span><span class="n">window_size</span><span class="o">//</span><span class="n">window_step</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">heatmap</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span> <span class="n">heatmap</span><span class="p">[</span><span class="n">i</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">heatmap</span><span class="p">[</span><span class="n">i</span><span class="p">,:],</span><span class="n">kernel</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">heatmap</span><span class="p">,</span> <span class="n">start_time</span><span class="o">-</span><span class="n">window_step</span><span class="o">/</span><span class="mi">2</span></div>
+
+
+<div class="viewcode-block" id="bin_data"><a class="viewcode-back" href="../../../api.html#snub.io.manifold.bin_data">[docs]</a><span class="k">def</span> <span class="nf">bin_data</span><span class="p">(</span>
+    <span class="n">data</span><span class="p">,</span> 
+    <span class="n">binsize</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Bin data column-wise using non-overlaping windows.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data: ndarray</span>
+<span class="sd">        Data for binning, where rows are variables and columns are observations.</span>
+
+<span class="sd">    binsize: int</span>
+<span class="sd">        Width of the window used for binning</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    data_binned: ndarray</span>
+
+<span class="sd">    bin_intervals: ndarray</span>
+<span class="sd">        (N,2) array with the start and end index of each bin</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">pad_amount</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">%</span><span class="n">binsize</span>
+    <span class="n">num_bins</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">pad_amount</span><span class="p">)</span><span class="o">/</span><span class="n">binsize</span><span class="p">)</span>
+
+    <span class="n">data_padded</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">data</span><span class="p">,((</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),(</span><span class="mi">0</span><span class="p">,</span><span class="n">pad_amount</span><span class="p">)))</span>
+    <span class="n">data_binned</span> <span class="o">=</span> <span class="n">data_padded</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_bins</span><span class="p">,</span> <span class="n">binsize</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">pad_amount</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span> <span class="n">data_binned</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_binned</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">binsize</span><span class="o">/</span><span class="n">pad_amount</span>
+
+    <span class="n">bin_starts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">num_bins</span><span class="p">)</span><span class="o">*</span><span class="n">binsize</span>
+    <span class="n">bin_ends</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">num_bins</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">binsize</span>
+    <span class="n">bin_ends</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">bin_intervals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">bin_starts</span><span class="p">,</span><span class="n">bin_ends</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
+
+    <span class="k">return</span> <span class="n">data_binned</span><span class="p">,</span> <span class="n">bin_intervals</span></div>
+
+
+
+<div class="viewcode-block" id="umap_embedding"><a class="viewcode-back" href="../../../api.html#snub.io.manifold.umap_embedding">[docs]</a><span class="k">def</span> <span class="nf">umap_embedding</span><span class="p">(</span>
+    <span class="n">data</span><span class="p">,</span> 
+    <span class="n">standardize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">n_pcs</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> 
+    <span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> 
+    <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Generate a 2D embedding of neural activity using UMAP. The function </span>
+<span class="sd">    generates the embedding in three steps:</span>
+
+<span class="sd">        1. (Optionally) standardize (Z-score) the activity of each neuron</span>
+
+<span class="sd">        2. Perform initial dimensionality reduction using PCA</span>
+
+<span class="sd">        3. Run UMAP on the output of PCA</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data: ndarray</span>
+<span class="sd">        Array of neural activity where rows are neurons and columns are time points</span>
+
+<span class="sd">    standardize: bool, default=True</span>
+<span class="sd">        Whether to standardize (Z-score) the data prior to PCA</span>
+
+<span class="sd">    n_pcs: int, default=20</span>
+<span class="sd">        Number of principal components to use during PCA. If ``n_pcs=None``, the binned </span>
+<span class="sd">        data will be passed directly to UMAP</span>
+
+<span class="sd">    n_components: int, default=2</span>
+<span class="sd">        Dimensionality of the embedding</span>
+
+<span class="sd">    n_neighbors: int, default=100</span>
+<span class="sd">        Passed to UMAP (see `explanation of UMAP parameters &lt;https://umap-learn.readthedocs.io/en/latest/parameters.html&gt;`_).</span>
+
+<span class="sd">    **kwargs</span>
+<span class="sd">        Any other UMAP parameters can also be passed as keyword arguments</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    coodinates: ndarray</span>
+<span class="sd">        (N,2) array containing UMAP coordinates</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">PCA</span>
+    <span class="kn">from</span> <span class="nn">umap</span> <span class="kn">import</span> <span class="n">UMAP</span>
+    <span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">zscore</span>
+
+    <span class="k">if</span> <span class="n">standardize</span><span class="p">:</span> <span class="n">data</span> <span class="o">=</span> <span class="n">zscore</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">PCs</span> <span class="o">=</span> <span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="n">n_pcs</span><span class="p">)</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+    <span class="n">umap_obj</span> <span class="o">=</span> <span class="n">UMAP</span><span class="p">(</span><span class="n">n_neighbors</span><span class="o">=</span><span class="n">n_neighbors</span><span class="p">,</span> <span class="n">n_components</span><span class="o">=</span><span class="n">n_components</span><span class="p">,</span> <span class="n">n_epochs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">coordinates</span> <span class="o">=</span> <span class="n">umap_obj</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">PCs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">coordinates</span></div>
+
+
+
+
+
+
+
+    
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Caleb Weinreb.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
