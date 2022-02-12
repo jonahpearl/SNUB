@@ -42,8 +42,9 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#installing-conda">Installing Conda</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#installing-snub">Installing SNUB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#install-conda">Install Conda</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#install-snub">Install SNUB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#test-snub">Test SNUB</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#snub-jupyter">SNUB + Jupyter</a></li>
 </ul>
 </li>
@@ -76,8 +77,8 @@
              
   <section id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline"></a></h1>
-<section id="installing-conda">
-<h2>Installing Conda<a class="headerlink" href="#installing-conda" title="Permalink to this headline"></a></h2>
+<section id="install-conda">
+<h2>Install Conda<a class="headerlink" href="#install-conda" title="Permalink to this headline"></a></h2>
 <p>Install <a class="reference external" href="https://docs.anaconda.com/anaconda/install/index.html">Anaconda</a> or <a class="reference external" href="https://docs.conda.io/en/latest/miniconda.html">Miniconda</a>. Create an environment called <code class="docutils literal notranslate"><span class="pre">snub</span></code> with python≥3.8:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">create</span> <span class="o">-</span><span class="n">n</span> <span class="n">snub</span> <span class="n">python</span><span class="o">=</span><span class="mf">3.8</span>
 </pre></div>
@@ -87,17 +88,28 @@
 </pre></div>
 </div>
 </section>
-<section id="installing-snub">
-<h2>Installing SNUB<a class="headerlink" href="#installing-snub" title="Permalink to this headline"></a></h2>
+<section id="install-snub">
+<h2>Install SNUB<a class="headerlink" href="#install-snub" title="Permalink to this headline"></a></h2>
 <p>Install SNUB using <code class="docutils literal notranslate"><span class="pre">pip</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">snub</span>
 </pre></div>
 </div>
+<p>To speed up selections, we recommend installing <code class="docutils literal notranslate"><span class="pre">ncls</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">ncls</span>
+</pre></div>
+</div>
+<p>To use the 3D mesh viewer, install <code class="docutils literal notranslate"><span class="pre">opengl</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">PyOpenGL</span> <span class="n">PyOpenGL_accelerate</span>
+</pre></div>
+</div>
+</section>
+<section id="test-snub">
+<h2>Test SNUB<a class="headerlink" href="#test-snub" title="Permalink to this headline"></a></h2>
 <p>To test the installation, try launching <code class="docutils literal notranslate"><span class="pre">snub</span></code> from the command line (make sure the <code class="docutils literal notranslate"><span class="pre">snub</span></code> conda environment is activated):</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">snub</span>
 </pre></div>
 </div>
-<p>A browser window should launch. Download the <a class="reference external" href="https://www.dropbox.com/sh/tz6kokymkpjicfb/AABBpFzqwFEdFfuXPzhv3Q_6a?dl=0">example data</a>, and try opening a project by going to <code class="docutils literal notranslate"><span class="pre">File</span> <span class="pre">&gt;</span> <span class="pre">Open</span> <span class="pre">Project</span></code>, navigating to one of the example projects, and hitting <code class="docutils literal notranslate"><span class="pre">Choose</span></code> with the project directory selected. Projects can also be opened by including the path as a command line argument:</p>
+<p>A browser window should launch. Download the <a class="reference external" href="https://www.dropbox.com/sh/tz6kokymkpjicfb/AABBpFzqwFEdFfuXPzhv3Q_6a?dl=0">example project</a>, and try opening it by going to <code class="docutils literal notranslate"><span class="pre">File</span> <span class="pre">&gt;</span> <span class="pre">Open</span> <span class="pre">Project</span></code>, navigating to the project directory, and hitting <code class="docutils literal notranslate"><span class="pre">Choose</span></code> with the directory selected. Projects can also be opened by including the path as a command line argument:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">snub</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">project</span><span class="o">/</span><span class="n">directory</span>
 </pre></div>
 </div>

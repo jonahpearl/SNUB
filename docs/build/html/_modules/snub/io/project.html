@@ -77,8 +77,31 @@
 <span class="kn">import</span> <span class="nn">colorsys</span>
 <span class="kn">from</span> <span class="nn">vidio</span> <span class="kn">import</span> <span class="n">VideoReader</span>
 
-<span class="k">def</span> <span class="nf">custom_formatwarning</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span> <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
-<span class="n">warnings</span><span class="o">.</span><span class="n">formatwarning</span> <span class="o">=</span> <span class="n">custom_formatwarning</span>
+<div class="viewcode-block" id="generate_intervals"><a class="viewcode-back" href="../../../api.html#snub.io.project.generate_intervals">[docs]</a><span class="k">def</span> <span class="nf">generate_intervals</span><span class="p">(</span><span class="n">start_time</span><span class="p">,</span> <span class="n">binsize</span><span class="p">,</span> <span class="n">num_intervals</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Generate an array of start/end times for non-overlapping</span>
+<span class="sd">    time intervals.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    start_time: float</span>
+<span class="sd">        Left bound of the first time interval</span>
+
+<span class="sd">    binsize: float</span>
+<span class="sd">        Width of each interval</span>
+
+<span class="sd">    num_intervals: int</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">        time_intervals: ndarray</span>
+<span class="sd">            Array of shape (num_intervals,2) containing the start </span>
+<span class="sd">            and end times for each interval.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">starts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">num_intervals</span><span class="p">)</span><span class="o">*</span><span class="n">binsize</span><span class="o">+</span><span class="n">start_time</span>
+    <span class="n">ends</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">num_intervals</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">binsize</span><span class="o">+</span><span class="n">start_time</span>
+    <span class="n">time_intervals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">starts</span><span class="p">,</span><span class="n">ends</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
+    <span class="k">return</span> <span class="n">time_intervals</span></div>
+
 
 <div class="viewcode-block" id="create_project"><a class="viewcode-back" href="../../../api.html#snub.io.project.create_project">[docs]</a><span class="k">def</span> <span class="nf">create_project</span><span class="p">(</span>
     <span class="n">project_directory</span><span class="p">,</span> 
@@ -89,10 +112,10 @@
     <span class="n">layout_mode</span><span class="o">=</span><span class="s1">&#39;columns&#39;</span><span class="p">,</span>
     <span class="n">tracks_size_ratio</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
     <span class="n">panels_size_ratio</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-    <span class="n">min_step</span><span class="o">=</span><span class="mf">.033</span><span class="p">,</span>
+    <span class="n">min_step</span><span class="o">=</span><span class="mi">1</span><span class="o">/</span><span class="mi">30</span><span class="p">,</span>
     <span class="n">animation_fps</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
-    <span class="n">zoom_gain</span><span class="o">=</span><span class="mf">0.003</span><span class="p">,</span>
-    <span class="n">min_range</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+    <span class="n">zoom_gain</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span>
+    <span class="n">min_range</span><span class="o">=</span><span class="mf">.25</span><span class="p">,</span>
     <span class="n">init_current_time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">initial_playspeed</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
     <span class="n">center_playhead</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -195,6 +218,8 @@
     <span class="c1"># create the config file</span>
     <span class="k">if</span> <span class="n">end_time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">end_time</span> <span class="o">=</span> <span class="n">start_time</span> <span class="o">+</span> <span class="n">duration</span>
     <span class="k">if</span> <span class="n">init_current_time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">init_current_time</span> <span class="o">=</span> <span class="n">start_time</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">end_time</span><span class="o">-</span><span class="n">start_time</span><span class="p">)</span><span class="o">/</span><span class="n">min_step</span> <span class="o">&gt;</span> <span class="mi">200000</span><span class="p">:</span> 
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;min_step=</span><span class="si">{}</span><span class="s1"> is too small for the total duration </span><span class="si">{}</span><span class="s1">. The maximum allowed ratio of `duration/min_step` is 200,000&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">min_step</span><span class="p">,</span> <span class="n">start_time</span><span class="o">-</span><span class="n">end_time</span><span class="p">))</span>
 
     <span class="n">config</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s1">&#39;bounds&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">start_time</span><span class="p">,</span><span class="n">end_time</span><span class="p">],</span>
@@ -219,7 +244,7 @@
     <span class="c1"># create the project directory and config file</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">project_directory</span><span class="p">):</span> 
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">project_directory</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Created project &quot;</span><span class="si">{}</span><span class="s1">&quot; with config:&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">project_directory</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Created project &quot;</span><span class="si">{}</span><span class="s1">&quot;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">project_directory</span><span class="p">))</span>
     <span class="n">save_config</span><span class="p">(</span><span class="n">project_directory</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">config</span></div>
     
@@ -506,7 +531,7 @@
         <span class="s1">&#39;order&#39;</span><span class="p">:</span> <span class="n">order</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="n">config</span><span class="p">[</span><span class="s1">&#39;video&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">props</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Added video plot &quot;</span><span class="si">{}</span><span class="s1">&quot; to </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">project_directory</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Added video plot &quot;</span><span class="si">{}</span><span class="s1">&quot;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
     <span class="n">save_config</span><span class="p">(</span><span class="n">project_directory</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">props</span></div>
    
@@ -564,7 +589,7 @@
     
     <span class="c1"># check that project exists and a trace plot with given name does not already exist</span>
     <span class="n">config</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">(</span><span class="n">project_directory</span><span class="p">)</span>
-    <span class="n">_confirm_no_existing_dataview</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;trace&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+    <span class="n">_confirm_no_existing_dataview</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;traceplot&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
     
     <span class="c1"># choose random colors for traces that werent assigned a color</span>
     <span class="n">unassigned_traces</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">traces</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">trace_colors</span><span class="p">]</span>
@@ -589,7 +614,7 @@
     <span class="p">}</span>
 
     <span class="n">config</span><span class="p">[</span><span class="s1">&#39;traceplot&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">props</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Added trace plot &quot;</span><span class="si">{}</span><span class="s1">&quot; to </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">project_directory</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Added trace plot &quot;</span><span class="si">{}</span><span class="se">\n</span><span class="s1">&quot; </span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">project_directory</span><span class="p">))</span>
     <span class="n">save_config</span><span class="p">(</span><span class="n">project_directory</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">props</span></div>
     
@@ -725,11 +750,7 @@
         <span class="k">if</span> <span class="n">binsize</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">start_time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
                 <span class="s1">&#39;Either a `time_intervals` must be given or `binsize` and `start_time` must be specified&#39;</span><span class="p">)</span>
-    
-        
-        <span class="n">starts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">num_points</span><span class="p">)</span><span class="o">*</span><span class="n">binsize</span><span class="o">+</span><span class="n">start_time</span>
-        <span class="n">ends</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">num_points</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">binsize</span><span class="o">+</span><span class="n">start_time</span>
-        <span class="n">time_intervals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">starts</span><span class="p">,</span><span class="n">ends</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">time_intervals</span> <span class="o">=</span> <span class="n">generate_intervals</span><span class="p">(</span><span class="n">start_time</span><span class="p">,</span> <span class="n">binsize</span><span class="p">,</span> <span class="n">num_points</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Initializing time intervals using start_time=</span><span class="si">{}</span><span class="s1"> and binsize=</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">start_time</span><span class="p">,</span> <span class="n">binsize</span><span class="p">))</span>
     
     <span class="c1"># initialize features:</span>
@@ -766,7 +787,7 @@
     <span class="k">if</span> <span class="n">ylim</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> <span class="n">props</span><span class="p">[</span><span class="s1">&#39;ylim&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ylim</span>
     
     <span class="n">config</span><span class="p">[</span><span class="s1">&#39;scatter&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">props</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Added scatter plot &quot;</span><span class="si">{}</span><span class="s1">&quot; to </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">project_directory</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Added scatter plot &quot;</span><span class="si">{}</span><span class="s1">&quot; </span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
     <span class="n">save_config</span><span class="p">(</span><span class="n">project_directory</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">props</span></div>
     
@@ -776,8 +797,9 @@
     <span class="n">project_directory</span><span class="p">,</span>
     <span class="n">name</span><span class="p">,</span>
     <span class="n">data</span><span class="p">,</span>
-    <span class="n">binsize</span><span class="p">,</span>
-    <span class="n">start_time</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">time_intervals</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">binsize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">start_time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">sort_method</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">show_labels</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -810,15 +832,23 @@
 <span class="sd">        </span>
 <span class="sd">    data : ndarray</span>
 <span class="sd">        2D array where rows are variables and columns are time bins.</span>
+
+<span class="sd">    time_intervals : ndarray, default=None</span>
+<span class="sd">        Time interval (in seconds) associated with each column of the heatmap, </span>
+<span class="sd">        given as a ``(N,2)`` array with ``[start,end]`` in each</span>
+<span class="sd">        row. If ``time_intervals=None``, then values for ``binsize``</span>
+<span class="sd">        and ``start_time`` must be given. </span>
+
+<span class="sd">    binsize: float, default=None</span>
+<span class="sd">        Uniform time interval (in seconds) associated with each column of the</span>
+<span class="sd">        heatmap. It is assumed that the intervals have no gaps or overlaps. </span>
+<span class="sd">        If this is not the case, use the ``time_intervals`` argument. </span>
 <span class="sd">        </span>
-<span class="sd">    binsize: float</span>
-<span class="sd">        Uniform time interval (in seconds) associated with each column</span>
-<span class="sd">        of the data array (explicit timestamps are not accepted).</span>
+<span class="sd">    start_time: float, default=None</span>
+<span class="sd">        Start time (in seconds) of the earliest time interval in the</span>
+<span class="sd">        heatmap. ``start_time`` is used in conjunction with</span>
+<span class="sd">        ``binsize`` to construct the time interval for each column.</span>
 <span class="sd">        </span>
-<span class="sd">    start_time: float, default=0</span>
-<span class="sd">        Start time (in seconds) of the the time interval covered by the </span>
-<span class="sd">        heatmap. ``start_time`` is used in conjunction with ``binsize``</span>
-<span class="sd">        to determine the placement of the heatmap along the timeline.</span>
 <span class="sd">        </span>
 <span class="sd">    sort_method: str/ndarray, default=None</span>
 <span class="sd">        Method for sorting the rows of the heatmap. ``sort_method`` can </span>
@@ -898,7 +928,20 @@
     <span class="n">data_path_abs</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_directory</span><span class="p">,</span><span class="n">data_path</span><span class="p">)</span>
     <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">data_path_abs</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Saved heatmap data to &#39;</span><span class="o">+</span><span class="n">data_path_abs</span><span class="p">)</span>
+
+    <span class="c1"># initialize/save time intervals</span>
+    <span class="k">if</span> <span class="n">time_intervals</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> 
+        <span class="k">if</span> <span class="n">binsize</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">start_time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
+                <span class="s1">&#39;Either a `time_intervals` must be given or `binsize` and `start_time` must be specified&#39;</span><span class="p">)</span>
+        <span class="n">time_intervals</span> <span class="o">=</span> <span class="n">generate_intervals</span><span class="p">(</span><span class="n">start_time</span><span class="p">,</span> <span class="n">binsize</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Initializing time intervals using start_time=</span><span class="si">{}</span><span class="s1"> and binsize=</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">start_time</span><span class="p">,</span> <span class="n">binsize</span><span class="p">))</span>
     
+    <span class="n">intervals_path</span> <span class="o">=</span> <span class="n">name</span><span class="o">+</span><span class="s1">&#39;.heatmap_intervals.npy&#39;</span>
+    <span class="n">intervals_path_abs</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_directory</span><span class="p">,</span><span class="n">intervals_path</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">intervals_path_abs</span><span class="p">,</span> <span class="n">time_intervals</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Saved time intervals to &#39;</span><span class="o">+</span><span class="n">intervals_path_abs</span><span class="p">)</span>
+
     <span class="c1"># save labels</span>
     <span class="k">if</span> <span class="n">labels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> 
         <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
@@ -919,7 +962,7 @@
     <span class="k">if</span> <span class="n">sort_method</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">row_order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sort_method</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="kn">from</span> <span class="nn">snub.manifold</span> <span class="kn">import</span> <span class="n">sort</span>
+        <span class="kn">from</span> <span class="nn">snub.io.manifold</span> <span class="kn">import</span> <span class="n">sort</span>
         <span class="n">row_order</span> <span class="o">=</span> <span class="n">sort</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">sort_method</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="n">sort_method</span><span class="p">]</span>
@@ -947,8 +990,7 @@
     <span class="n">props</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
         <span class="s1">&#39;data_path&#39;</span><span class="p">:</span> <span class="n">data_path</span><span class="p">,</span>
-        <span class="s1">&#39;binsize&#39;</span><span class="p">:</span> <span class="n">binsize</span><span class="p">,</span>
-        <span class="s1">&#39;start_time&#39;</span><span class="p">:</span> <span class="n">start_time</span><span class="p">,</span>
+        <span class="s1">&#39;intervals_path&#39;</span><span class="p">:</span><span class="n">intervals_path</span><span class="p">,</span>
         <span class="s1">&#39;labels_path&#39;</span><span class="p">:</span> <span class="n">labels_path</span><span class="p">,</span>
         <span class="s1">&#39;show_labels&#39;</span><span class="p">:</span> <span class="n">show_labels</span><span class="p">,</span>
         <span class="s1">&#39;row_order_path&#39;</span><span class="p">:</span> <span class="n">row_order_path</span><span class="p">,</span>
@@ -965,7 +1007,7 @@
         <span class="s1">&#39;order&#39;</span><span class="p">:</span> <span class="n">order</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="n">config</span><span class="p">[</span><span class="s1">&#39;heatmap&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">props</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Added heatmap &quot;</span><span class="si">{}</span><span class="s1">&quot; to </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">project_directory</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Added heatmap &quot;</span><span class="si">{}</span><span class="s1">&quot;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
     <span class="n">save_config</span><span class="p">(</span><span class="n">project_directory</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">props</span></div>
     
@@ -1043,6 +1085,7 @@
     <span class="n">_confirm_no_existing_dataview</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;spikeplot&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
     
     <span class="c1"># save spike times and spike labels</span>
+    <span class="n">spike_labels</span> <span class="o">=</span> <span class="n">spike_labels</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
     <span class="n">spike_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">spike_times</span><span class="p">,</span> <span class="n">spike_labels</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
     <span class="n">spikes_path</span> <span class="o">=</span> <span class="n">name</span><span class="o">+</span><span class="s1">&#39;.spikeplot_spikes.npy&#39;</span>
     <span class="n">spikes_path_abs</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_directory</span><span class="p">,</span><span class="n">spikes_path</span><span class="p">)</span>
@@ -1055,13 +1098,21 @@
     <span class="n">heatmap_path</span> <span class="o">=</span> <span class="n">name</span><span class="o">+</span><span class="s1">&#39;.spikeplot_heatmap.npy&#39;</span>
     <span class="n">heatmap_path_abs</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_directory</span><span class="p">,</span><span class="n">heatmap_path</span><span class="p">)</span>
     <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">heatmap_path_abs</span><span class="p">,</span> <span class="n">heatmap_data</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Saved heatmap data to &#39;</span><span class="o">+</span><span class="n">heatmap_path_abs</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Saved firing rate data to &#39;</span><span class="o">+</span><span class="n">heatmap_path_abs</span><span class="p">)</span>
+
+    <span class="c1"># save time intervals</span>
+    <span class="n">time_intervals</span> <span class="o">=</span> <span class="n">generate_intervals</span><span class="p">(</span><span class="n">start_time</span><span class="p">,</span> <span class="n">window_step</span><span class="p">,</span> <span class="n">heatmap_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">intervals_path</span> <span class="o">=</span> <span class="n">name</span><span class="o">+</span><span class="s1">&#39;.spikeplot_intervals.npy&#39;</span>
+    <span class="n">intervals_path_abs</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_directory</span><span class="p">,</span><span class="n">intervals_path</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">intervals_path_abs</span><span class="p">,</span> <span class="n">time_intervals</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Saved time intervals to &#39;</span><span class="o">+</span><span class="n">intervals_path_abs</span><span class="p">)</span>
+
     
     <span class="c1"># save labels</span>
     <span class="k">if</span> <span class="n">labels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> 
         <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">heatmap_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Creating labels from row ordering&#39;</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="o">!=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="o">!=</span> <span class="n">heatmap_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
         <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
             <span class="s1">&#39;The length of `labels` (</span><span class="si">{}</span><span class="s1">) does not match the number of arrays in `spike_times` (</span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">),</span> <span class="n">heatmap_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
     <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">labels</span><span class="p">))</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">):</span>
@@ -1076,11 +1127,12 @@
     <span class="c1"># save row order</span>
     <span class="k">if</span> <span class="n">sort_method</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">row_order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">heatmap_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sort_method</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="kn">from</span> <span class="nn">snub.manifold</span> <span class="kn">import</span> <span class="n">sort</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sort_method</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">snub.io.manifold</span> <span class="kn">import</span> <span class="n">sort</span>
         <span class="n">row_order</span> <span class="o">=</span> <span class="n">sort</span><span class="p">(</span><span class="n">heatmap_data</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">sort_method</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span> <span class="n">heatmap_data</span><span class="p">[</span><span class="n">sort_method</span><span class="p">]</span>
+        <span class="n">row_order</span> <span class="o">=</span> <span class="n">sort_method</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span> <span class="n">heatmap_data</span><span class="p">[</span><span class="n">row_order</span><span class="p">]</span>
         <span class="k">except</span><span class="p">:</span> <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
             <span class="s1">&#39;`sort_order` must be None, a string, or a valid index that can be used in `data[sort_method]`&#39;</span><span class="p">)</span>
     <span class="n">row_order_path</span> <span class="o">=</span> <span class="n">name</span><span class="o">+</span><span class="s1">&#39;.spikeplot_row_order.npy&#39;</span>
@@ -1106,8 +1158,7 @@
         <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
         <span class="s1">&#39;heatmap_path&#39;</span><span class="p">:</span> <span class="n">heatmap_path</span><span class="p">,</span>
         <span class="s1">&#39;spikes_path&#39;</span><span class="p">:</span> <span class="n">spikes_path</span><span class="p">,</span>
-        <span class="s1">&#39;binsize&#39;</span><span class="p">:</span> <span class="n">window_step</span><span class="p">,</span>
-        <span class="s1">&#39;start_time&#39;</span><span class="p">:</span> <span class="n">start_time</span><span class="p">,</span>
+        <span class="s1">&#39;intervals_path&#39;</span><span class="p">:</span><span class="n">intervals_path</span><span class="p">,</span>
         <span class="s1">&#39;labels_path&#39;</span><span class="p">:</span> <span class="n">labels_path</span><span class="p">,</span>
         <span class="s1">&#39;row_order_path&#39;</span><span class="p">:</span> <span class="n">row_order_path</span><span class="p">,</span>
         <span class="s1">&#39;show_labels&#39;</span><span class="p">:</span> <span class="n">show_labels</span><span class="p">,</span>
@@ -1125,7 +1176,7 @@
         <span class="s1">&#39;order&#39;</span><span class="p">:</span> <span class="n">order</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="n">config</span><span class="p">[</span><span class="s1">&#39;spikeplot&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">props</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Added spike plot &quot;</span><span class="si">{}</span><span class="s1">&quot; to </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">project_directory</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Added spike plot &quot;</span><span class="si">{}</span><span class="s1">&quot;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
     <span class="n">save_config</span><span class="p">(</span><span class="n">project_directory</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">props</span></div>
     

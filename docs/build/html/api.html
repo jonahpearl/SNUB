@@ -79,7 +79,7 @@
 <span id="snub-io-project"></span><h2>snub.io.project<a class="headerlink" href="#module-snub.io.project" title="Permalink to this headline"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="snub.io.project.add_heatmap">
-<span class="sig-prename descclassname"><span class="pre">snub.io.project.</span></span><span class="sig-name descname"><span class="pre">add_heatmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project_directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">binsize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_label_width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(255,</span> <span class="pre">255,</span> <span class="pre">255)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_font_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colormap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'viridis'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_traceplot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trace_height_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heatmap_height_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snub/io/project.html#add_heatmap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#snub.io.project.add_heatmap" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">snub.io.project.</span></span><span class="sig-name descname"><span class="pre">add_heatmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project_directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_intervals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">binsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_label_width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(255,</span> <span class="pre">255,</span> <span class="pre">255)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_font_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colormap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'viridis'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_traceplot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trace_height_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heatmap_height_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snub/io/project.html#add_heatmap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#snub.io.project.add_heatmap" title="Permalink to this definition"></a></dt>
 <dd><p>Add a heatmap to your SNUB project.
 If plotting neural data, it is helpful to sort the rows of the heatmap
 so that correlated neurons are clustered together (use the <code class="docutils literal notranslate"><span class="pre">sort_method</span></code>
@@ -91,53 +91,76 @@ argument; see <a class="reference internal" href="#snub.io.manifold.sort" title=
 <li><p><strong>name</strong> (<em>str</em>) – The name of the heatmap displayed in SNUB and used
 for editing the config file.</p></li>
 <li><p><strong>data</strong> (<em>ndarray</em>) – 2D array where rows are variables and columns are time bins.</p></li>
-<li><p><strong>binsize</strong> (<em>float</em>) – Uniform time interval (in seconds) associated with each column
-of the data array (explicit timestamps are not accepted).</p></li>
-<li><p><strong>start_time</strong> (<em>float</em><em>, </em><em>default=0</em>) – Start time (in seconds) of the the time interval covered by the
-heatmap. <code class="docutils literal notranslate"><span class="pre">start_time</span></code> is used in conjunction with <code class="docutils literal notranslate"><span class="pre">binsize</span></code>
-to determine the placement of the heatmap along the timeline.</p></li>
-<li><p><strong>sort_method</strong> (<em>str/ndarray</em><em>, </em><em>default=None</em>) – Method for sorting the rows of the heatmap. <code class="docutils literal notranslate"><span class="pre">sort_method</span></code> can
+<li><p><strong>time_intervals</strong> (<em>ndarray</em><em>, </em><em>default=None</em>) – Time interval (in seconds) associated with each column of the heatmap,
+given as a <code class="docutils literal notranslate"><span class="pre">(N,2)</span></code> array with <code class="docutils literal notranslate"><span class="pre">[start,end]</span></code> in each
+row. If <code class="docutils literal notranslate"><span class="pre">time_intervals=None</span></code>, then values for <code class="docutils literal notranslate"><span class="pre">binsize</span></code>
+and <code class="docutils literal notranslate"><span class="pre">start_time</span></code> must be given.</p></li>
+<li><p><strong>binsize</strong> (<em>float</em><em>, </em><em>default=None</em>) – Uniform time interval (in seconds) associated with each column of the
+heatmap. It is assumed that the intervals have no gaps or overlaps.
+If this is not the case, use the <code class="docutils literal notranslate"><span class="pre">time_intervals</span></code> argument.</p></li>
+<li><p><strong>start_time</strong> (<em>float</em><em>, </em><em>default=None</em>) – Start time (in seconds) of the earliest time interval in the
+heatmap. <code class="docutils literal notranslate"><span class="pre">start_time</span></code> is used in conjunction with
+<code class="docutils literal notranslate"><span class="pre">binsize</span></code> to construct the time interval for each column.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="simple">
+<dt>sort_method: str/ndarray, default=None</dt><dd><p>Method for sorting the rows of the heatmap. <code class="docutils literal notranslate"><span class="pre">sort_method</span></code> can
 either be an array directly specifying the row order or a str
 defining a sort method from <a class="reference internal" href="#snub.io.manifold.sort" title="snub.io.manifold.sort"><code class="xref py py-func docutils literal notranslate"><span class="pre">snub.io.manifold.sort()</span></code></a>.
-If <code class="docutils literal notranslate"><span class="pre">sort_method=None</span></code>, the original ordering of the rows will be used.</p></li>
-<li><p><strong>labels</strong> (<em>list of str</em><em>, </em><em>default=None</em>) – Labels for each variable (row) in the heatmap. If <code class="docutils literal notranslate"><span class="pre">show_labels=True</span></code>,
+If <code class="docutils literal notranslate"><span class="pre">sort_method=None</span></code>, the original ordering of the rows will be used.</p>
+</dd>
+<dt>labels: list of str, default=None</dt><dd><p>Labels for each variable (row) in the heatmap. If <code class="docutils literal notranslate"><span class="pre">show_labels=True</span></code>,
 the labels are rendered within SNUB. If <code class="docutils literal notranslate"><span class="pre">add_traceplot=True</span></code>, the
 labels are also used to plot specific variables in the trace plot
 associated with the heatmap. When no labels are given, they
 default to the integer order of each row. If the elements of <code class="docutils literal notranslate"><span class="pre">labels</span></code>
-are not unique, their integer order is prepended.</p></li>
-<li><p><strong>show_labels</strong> (<em>bool</em><em>, </em><em>default=False</em>) – Determines whether labels are rendered on the left side of the heatmap
+are not unique, their integer order is prepended.</p>
+</dd>
+<dt>show_labels: bool, default=False</dt><dd><p>Determines whether labels are rendered on the left side of the heatmap
 in SNUB. It is recommended to leave <code class="docutils literal notranslate"><span class="pre">show_labels=False</span></code> when the heatmap
-contains a large number of rows.</p></li>
-<li><p><strong>max_label_width</strong> (<em>int</em><em>, </em><em>default=300</em>) – If <code class="docutils literal notranslate"><span class="pre">show_labels=True</span></code>, <code class="docutils literal notranslate"><span class="pre">max_label_width</span></code> determines how far
+contains a large number of rows.</p>
+</dd>
+<dt>max_label_width: int, default=300</dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">show_labels=True</span></code>, <code class="docutils literal notranslate"><span class="pre">max_label_width</span></code> determines how far
 the label text can encroach on the heatmap (in pixels). This
-is only relevant if any of the labels are really long.</p></li>
-<li><p><strong>label_color</strong> (<em>(</em><em>int</em><em>,</em><em>int</em><em>,</em><em>int</em><em>)</em><em>, </em><em>default=</em><em>(</em><em>255</em><em>,</em><em>255</em><em>,</em><em>255</em><em>)</em>) – Color of the labels superimposed on the heatmap if <code class="docutils literal notranslate"><span class="pre">show_labels=True</span></code>.</p></li>
-<li><p><strong>label_font_size</strong> (<em>int</em><em>, </em><em>default=12</em>) – Size of the labels superimposed on the heatmap if <code class="docutils literal notranslate"><span class="pre">show_labels=True</span></code>.</p></li>
-<li><p><strong>colormap</strong> (<em>str</em><em>, </em><em>default='viridis'</em>) – Colormap used for rendering the heatmap values. The colormap
-options are ported from matplotlib via <a class="reference external" href="https://gitlab.com/cvejarano-oss/cmapy/">cmapy</a></p></li>
-<li><p><strong>vmin</strong> (<em>float</em><em>, </em><em>default=None</em>) – Floor for the colormap. If <code class="docutils literal notranslate"><span class="pre">vmin=None</span></code>, it will be set to to the 1st percentile
-of the data values. This parameter can be adjusted within the browser.</p></li>
-<li><p><strong>vmax</strong> (<em>float</em><em>, </em><em>default=None</em>) – Ceiling for the colormap. If <code class="docutils literal notranslate"><span class="pre">vmax=None</span></code>, it will be set to to the 99th percentile
-of the data values. This parameter can be adjusted within the browser.</p></li>
-<li><p><strong>add_traceplot</strong> (<em>bool</em><em>, </em><em>default=True</em>) – Determines whether or not a trace plot is added with the heatmap.
-This is useful for pulling out and plotting specific rows from the heatmap.</p></li>
-<li><p><strong>height_ratio</strong> (<em>int</em><em>, </em><em>default=1</em>) – The relative height initially allocated to this data-view in the track-stack.
-Spacing can also be adjusted within the browser.</p></li>
-<li><p><strong>trace_height_ratio</strong> (<em>int</em><em>, </em><em>default=1</em>) – If <code class="docutils literal notranslate"><span class="pre">add_traceplot=True</span></code>, this parameter determines the relative height
+is only relevant if any of the labels are really long.</p>
+</dd>
+<dt>label_color: (int,int,int), default=(255,255,255)</dt><dd><p>Color of the labels superimposed on the heatmap if <code class="docutils literal notranslate"><span class="pre">show_labels=True</span></code>.</p>
+</dd>
+<dt>label_font_size: int, default=12</dt><dd><p>Size of the labels superimposed on the heatmap if <code class="docutils literal notranslate"><span class="pre">show_labels=True</span></code>.</p>
+</dd>
+<dt>colormap: str, default=’viridis’</dt><dd><p>Colormap used for rendering the heatmap values. The colormap
+options are ported from matplotlib via <a class="reference external" href="https://gitlab.com/cvejarano-oss/cmapy/">cmapy</a></p>
+</dd>
+<dt>vmin: float, default=None</dt><dd><p>Floor for the colormap. If <code class="docutils literal notranslate"><span class="pre">vmin=None</span></code>, it will be set to to the 1st percentile
+of the data values. This parameter can be adjusted within the browser.</p>
+</dd>
+<dt>vmax: float, default=None</dt><dd><p>Ceiling for the colormap. If <code class="docutils literal notranslate"><span class="pre">vmax=None</span></code>, it will be set to to the 99th percentile
+of the data values. This parameter can be adjusted within the browser.</p>
+</dd>
+<dt>add_traceplot: bool, default=True</dt><dd><p>Determines whether or not a trace plot is added with the heatmap.
+This is useful for pulling out and plotting specific rows from the heatmap.</p>
+</dd>
+<dt>height_ratio: int, default=1</dt><dd><p>The relative height initially allocated to this data-view in the track-stack.
+Spacing can also be adjusted within the browser.</p>
+</dd>
+<dt>trace_height_ratio: int, default=1</dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">add_traceplot=True</span></code>, this parameter determines the relative height
 initially allocated to the trace plot associated with the heatmap.
-Spacing can also be adjusted within the browser.</p></li>
-<li><p><strong>heatmap_height_ratio</strong> (<em>int</em><em>, </em><em>default=2</em>) – If <code class="docutils literal notranslate"><span class="pre">add_traceplot=True</span></code>, this parameter determines the relative height
+Spacing can also be adjusted within the browser.</p>
+</dd>
+<dt>heatmap_height_ratio: int, default=2</dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">add_traceplot=True</span></code>, this parameter determines the relative height
 initially allocated to the heatmap compared to its associated trace plot.
-Spacing can also be adjusted within the browser.</p></li>
-<li><p><strong>order</strong> (<em>float</em><em>, </em><em>default=0</em>) – Determines the order of placement within the track-stack.</p></li>
-</ul>
+Spacing can also be adjusted within the browser.</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>props</strong> – heatmap properties</p>
+<dt>order: float, default=0</dt><dd><p>Determines the order of placement within the track-stack.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>dict</p>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>props</strong> – heatmap properties</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
 </dd>
 </dl>
 </dd></dl>
@@ -337,7 +360,7 @@ left-to-right (row mode) by ascending rank of the <code class="docutils literal 
 
 <dl class="py function">
 <dt class="sig sig-object py" id="snub.io.project.create_project">
-<span class="sig-prename descclassname"><span class="pre">snub.io.project.</span></span><span class="sig-name descname"><span class="pre">create_project</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project_directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layout_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'columns'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tracks_size_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">panels_size_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.033</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">animation_fps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zoom_gain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.003</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_current_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_playspeed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center_playhead</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snub/io/project.html#create_project"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#snub.io.project.create_project" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">snub.io.project.</span></span><span class="sig-name descname"><span class="pre">create_project</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project_directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layout_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'columns'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tracks_size_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">panels_size_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.03333333333333333</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">animation_fps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zoom_gain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_current_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_playspeed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center_playhead</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snub/io/project.html#create_project"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#snub.io.project.create_project" title="Permalink to this definition"></a></dt>
 <dd><p>Set up a new SNUB project by creating a directory and config.json file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -419,6 +442,29 @@ To change the properties of a specific data-view, use
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>project_directory</strong> (<em>str</em>) – Project path containing the config.json file.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="snub.io.project.generate_intervals">
+<span class="sig-prename descclassname"><span class="pre">snub.io.project.</span></span><span class="sig-name descname"><span class="pre">generate_intervals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">binsize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_intervals</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snub/io/project.html#generate_intervals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#snub.io.project.generate_intervals" title="Permalink to this definition"></a></dt>
+<dd><p>Generate an array of start/end times for non-overlapping
+time intervals.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start_time</strong> (<em>float</em>) – Left bound of the first time interval</p></li>
+<li><p><strong>binsize</strong> (<em>float</em>) – Width of each interval</p></li>
+<li><p><strong>num_intervals</strong> (<em>int</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>time_intervals</strong> – Array of shape (num_intervals,2) containing the start
+and end times for each interval.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ndarray</p>
 </dd>
 </dl>
 </dd></dl>
