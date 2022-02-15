@@ -20,8 +20,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Browser API" href="api.html" />
-    <link rel="prev" title="Tutorials" href="tutorials.html" /> 
+    <link rel="next" title="Tutorials" href="tutorials.html" />
+    <link rel="prev" title="SNUB (Systems Neuro Browser)" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -40,7 +40,6 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#install-conda">Install Conda</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#install-snub">Install SNUB</a></li>
@@ -48,6 +47,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#snub-jupyter">SNUB + Jupyter</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">snub.io</a></li>
 </ul>
 
@@ -79,27 +79,29 @@
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline"></a></h1>
 <section id="install-conda">
 <h2>Install Conda<a class="headerlink" href="#install-conda" title="Permalink to this headline"></a></h2>
-<p>Install <a class="reference external" href="https://docs.anaconda.com/anaconda/install/index.html">Anaconda</a> or <a class="reference external" href="https://docs.conda.io/en/latest/miniconda.html">Miniconda</a>. Create an environment called <code class="docutils literal notranslate"><span class="pre">snub</span></code> with python≥3.8:</p>
+<p>Install <a class="reference external" href="https://docs.anaconda.com/anaconda/install/index.html">Anaconda</a> or <a class="reference external" href="https://docs.conda.io/en/latest/miniconda.html">Miniconda</a>. Create and activate an environment called <code class="docutils literal notranslate"><span class="pre">snub</span></code> with python≥3.8:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">create</span> <span class="o">-</span><span class="n">n</span> <span class="n">snub</span> <span class="n">python</span><span class="o">=</span><span class="mf">3.8</span>
-</pre></div>
-</div>
-<p>Activate the environment:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">activate</span> <span class="n">snub</span>
+<span class="n">conda</span> <span class="n">activate</span> <span class="n">snub</span>
 </pre></div>
 </div>
 </section>
 <section id="install-snub">
 <h2>Install SNUB<a class="headerlink" href="#install-snub" title="Permalink to this headline"></a></h2>
-<p>Install SNUB using <code class="docutils literal notranslate"><span class="pre">pip</span></code>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">snub</span>
+<p>Clone or download the <a class="reference external" href="https://github.com/calebweinreb/SNUB">SNUB github repo</a> and pip install:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">calebweinreb</span><span class="o">/</span><span class="n">SNUB</span><span class="o">.</span><span class="n">git</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">e</span> <span class="n">SNUB</span>
 </pre></div>
 </div>
 <p>To speed up selections, we recommend installing <code class="docutils literal notranslate"><span class="pre">ncls</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">ncls</span>
 </pre></div>
 </div>
-<p>To use the 3D mesh viewer, install <code class="docutils literal notranslate"><span class="pre">opengl</span></code>:</p>
+<p>To use the 3D mesh viewer:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">PyOpenGL</span> <span class="n">PyOpenGL_accelerate</span>
+</pre></div>
+</div>
+<p>To use SNUB on linux:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">qt5</span><span class="o">-</span><span class="n">default</span>
 </pre></div>
 </div>
 </section>
@@ -109,7 +111,7 @@
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">snub</span>
 </pre></div>
 </div>
-<p>A browser window should launch. Download the <a class="reference external" href="https://www.dropbox.com/sh/tz6kokymkpjicfb/AABBpFzqwFEdFfuXPzhv3Q_6a?dl=0">example project</a>, and try opening it by going to <code class="docutils literal notranslate"><span class="pre">File</span> <span class="pre">&gt;</span> <span class="pre">Open</span> <span class="pre">Project</span></code>, navigating to the project directory, and hitting <code class="docutils literal notranslate"><span class="pre">Choose</span></code> with the directory selected. Projects can also be opened by including the path as a command line argument:</p>
+<p>A browser window should launch. Download the <a class="reference external" href="https://www.dropbox.com/sh/ujr3ttdc3gsxtqt/AAAKLL9iaF54cOwPKRPMTENIa?dl=0">example project</a>, and try opening it by going to <code class="docutils literal notranslate"><span class="pre">File</span> <span class="pre">&gt;</span> <span class="pre">Open</span> <span class="pre">Project</span></code>, navigating to the project directory, and hitting <code class="docutils literal notranslate"><span class="pre">Choose</span></code> with the directory selected. Projects can also be opened by including the path as a command line argument:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">snub</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">project</span><span class="o">/</span><span class="n">directory</span>
 </pre></div>
 </div>
@@ -127,8 +129,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="tutorials.html" class="btn btn-neutral float-left" title="Tutorials" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="api.html" class="btn btn-neutral float-right" title="Browser API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index.html" class="btn btn-neutral float-left" title="SNUB (Systems Neuro Browser)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tutorials.html" class="btn btn-neutral float-right" title="Tutorials" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
