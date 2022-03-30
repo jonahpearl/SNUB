@@ -37,8 +37,8 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../api.html">snub.io</a></li>
 </ul>
 
@@ -68,37 +68,10 @@
              
   <h1>Source code for snub.io.manifold</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-
 <span class="kn">import</span> <span class="nn">warnings</span>
 
-<div class="viewcode-block" id="sort"><a class="viewcode-back" href="../../../api.html#snub.io.manifold.sort">[docs]</a><span class="k">def</span> <span class="nf">sort</span><span class="p">(</span>
-    <span class="n">data</span><span class="p">,</span> 
-    <span class="n">method</span><span class="o">=</span><span class="s1">&#39;rastermap&#39;</span><span class="p">,</span> 
-    <span class="n">options</span><span class="o">=</span><span class="p">{}</span>
-<span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Linearly sort neurons in order to group those with similar activity</span>
 
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    method: {&#39;rastermap&#39;}</span>
-<span class="sd">        Method to use for sorting (currently only rastermap is implemented)</span>
-
-<span class="sd">    options: dict, default={}</span>
-<span class="sd">        Sorting method-specific options.</span>
-
-<span class="sd">        &#39;rastermap&#39;</span>
-<span class="sd">            ``options`` will be passed as keyword arguments when initializing</span>
-<span class="sd">            `rastermap.mapping.Rastermap &lt;https://github.com/MouseLand/rastermap/blob/40867ce9a8b2850d76483890740c0dc10d6cb413/rastermap/mapping.py#L531&gt;`_</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">valid_sort_methods</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;rastermap&#39;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">valid_sort_methods</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="n">method</span><span class="o">+</span><span class="s1">&#39; is not a valid sort method. Must be one of &#39;</span><span class="o">+</span><span class="nb">repr</span><span class="p">(</span><span class="n">valid_sort_methods</span><span class="p">))</span>
-    <span class="k">if</span> <span class="n">method</span><span class="o">==</span><span class="s1">&#39;rastermap&#39;</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Computing row order with rastermap&#39;</span><span class="p">)</span>
-        <span class="kn">from</span> <span class="nn">rastermap</span> <span class="kn">import</span> <span class="n">mapping</span>
-        <span class="n">model</span> <span class="o">=</span> <span class="n">mapping</span><span class="o">.</span><span class="n">Rastermap</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">embedding</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span></div>
-
+<span class="c1"># Binning / smoothing</span>
     
 <div class="viewcode-block" id="firing_rates"><a class="viewcode-back" href="../../../api.html#snub.io.manifold.firing_rates">[docs]</a><span class="k">def</span> <span class="nf">firing_rates</span><span class="p">(</span>
     <span class="n">spike_times</span><span class="p">,</span> 
@@ -156,43 +129,91 @@
 
 <div class="viewcode-block" id="bin_data"><a class="viewcode-back" href="../../../api.html#snub.io.manifold.bin_data">[docs]</a><span class="k">def</span> <span class="nf">bin_data</span><span class="p">(</span>
     <span class="n">data</span><span class="p">,</span> 
-    <span class="n">binsize</span>
+    <span class="n">binsize</span><span class="p">,</span>
+    <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">return_intervals</span><span class="o">=</span><span class="kc">False</span>
 <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Bin data column-wise using non-overlaping windows.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    data: ndarray</span>
-<span class="sd">        Data for binning, where rows are variables and columns are observations.</span>
-
-<span class="sd">    binsize: int</span>
-<span class="sd">        Width of the window used for binning</span>
+    <span class="sd">&quot;&quot;&quot;Bin data using non-overlaping windows along `axis`</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    data_binned: ndarray</span>
 
-<span class="sd">    bin_intervals: ndarray</span>
+<span class="sd">    bin_intervals: ndarray (returned if ``rerturn_intervals=True``)</span>
 <span class="sd">        (N,2) array with the start and end index of each bin</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">pad_amount</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">%</span><span class="n">binsize</span>
-    <span class="n">num_bins</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">pad_amount</span><span class="p">)</span><span class="o">/</span><span class="n">binsize</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">axis</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">pad_amount</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">%</span><span class="n">binsize</span>
+    <span class="n">num_bins</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">pad_amount</span><span class="p">)</span><span class="o">/</span><span class="n">binsize</span><span class="p">)</span>
 
-    <span class="n">data_padded</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">data</span><span class="p">,((</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),(</span><span class="mi">0</span><span class="p">,</span><span class="n">pad_amount</span><span class="p">)))</span>
-    <span class="n">data_binned</span> <span class="o">=</span> <span class="n">data_padded</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_bins</span><span class="p">,</span> <span class="n">binsize</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">pad_amount</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span> <span class="n">data_binned</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_binned</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">binsize</span><span class="o">/</span><span class="n">pad_amount</span>
+    <span class="n">data_padded</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">data</span><span class="p">,[(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)]</span><span class="o">*</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="p">[(</span><span class="mi">0</span><span class="p">,</span><span class="n">pad_amount</span><span class="p">)])</span>
+    <span class="n">data_binned</span> <span class="o">=</span> <span class="n">data_padded</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">*</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">num_bins</span><span class="p">,</span> <span class="n">binsize</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">pad_amount</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span> <span class="n">data_binned</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_binned</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">binsize</span><span class="o">/</span><span class="p">(</span><span class="n">binsize</span><span class="o">-</span><span class="n">pad_amount</span><span class="p">)</span>
+    <span class="n">data_binned</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">data_binned</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">axis</span><span class="p">)</span>
 
-    <span class="n">bin_starts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">num_bins</span><span class="p">)</span><span class="o">*</span><span class="n">binsize</span>
-    <span class="n">bin_ends</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">num_bins</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">binsize</span>
-    <span class="n">bin_ends</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">bin_intervals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">bin_starts</span><span class="p">,</span><span class="n">bin_ends</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
+    <span class="k">if</span> <span class="n">return_intervals</span><span class="p">:</span>
+        <span class="n">bin_starts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">num_bins</span><span class="p">)</span><span class="o">*</span><span class="n">binsize</span>
+        <span class="n">bin_ends</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">num_bins</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">binsize</span>
+        <span class="n">bin_ends</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">bin_intervals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">bin_starts</span><span class="p">,</span><span class="n">bin_ends</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
+        <span class="k">return</span> <span class="n">data_binned</span><span class="p">,</span> <span class="n">bin_intervals</span>
+    <span class="k">else</span><span class="p">:</span> <span class="k">return</span> <span class="n">data_binned</span></div>
 
-    <span class="k">return</span> <span class="n">data_binned</span><span class="p">,</span> <span class="n">bin_intervals</span></div>
 
-<span class="k">def</span> <span class="nf">zscore</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">):</span>
+
+<span class="c1"># Normalization</span>
+
+<div class="viewcode-block" id="zscore"><a class="viewcode-back" href="../../../api.html#snub.io.manifold.zscore">[docs]</a><span class="k">def</span> <span class="nf">zscore</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Z-score standardize the data along ``axis``</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">+</span> <span class="n">eps</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">data</span><span class="o">-</span><span class="n">mean</span><span class="p">)</span><span class="o">/</span><span class="n">std</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">data</span><span class="o">-</span><span class="n">mean</span><span class="p">)</span><span class="o">/</span><span class="n">std</span></div>
+
+
+
+    
+
+<span class="c1"># Dimensionality reduction</span>
+
+<div class="viewcode-block" id="sort"><a class="viewcode-back" href="../../../api.html#snub.io.manifold.sort">[docs]</a><span class="k">def</span> <span class="nf">sort</span><span class="p">(</span>
+    <span class="n">data</span><span class="p">,</span> 
+    <span class="n">method</span><span class="o">=</span><span class="s1">&#39;rastermap&#39;</span><span class="p">,</span> 
+    <span class="n">options</span><span class="o">=</span><span class="p">{}</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compute neuron ordering that groups neurons with similar activity</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data: ndarray</span>
+<span class="sd">        Data matrix where rows are neurons and columns are time points</span>
+
+<span class="sd">    method: {&#39;rastermap&#39;}</span>
+<span class="sd">        Method to use for sorting (currently only rastermap is implemented)</span>
+
+<span class="sd">    options: dict, default={}</span>
+<span class="sd">        Sorting method-specific options.</span>
+
+<span class="sd">        &#39;rastermap&#39;</span>
+<span class="sd">            ``options`` will be passed as keyword arguments when initializing</span>
+<span class="sd">            `rastermap.mapping.Rastermap &lt;https://github.com/MouseLand/rastermap/blob/40867ce9a8b2850d76483890740c0dc10d6cb413/rastermap/mapping.py#L531&gt;`_</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ordering: ndarray</span>
+<span class="sd">        Ordering index that can be used for sorting (see `numpy.argsort`)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">valid_sort_methods</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;rastermap&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">valid_sort_methods</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="n">method</span><span class="o">+</span><span class="s1">&#39; is not a valid sort method. Must be one of &#39;</span><span class="o">+</span><span class="nb">repr</span><span class="p">(</span><span class="n">valid_sort_methods</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">method</span><span class="o">==</span><span class="s1">&#39;rastermap&#39;</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Computing row order with rastermap&#39;</span><span class="p">)</span>
+        <span class="kn">from</span> <span class="nn">rastermap</span> <span class="kn">import</span> <span class="n">mapping</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">mapping</span><span class="o">.</span><span class="n">Rastermap</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">embedding</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span></div>
+
 
 <div class="viewcode-block" id="umap_embedding"><a class="viewcode-back" href="../../../api.html#snub.io.manifold.umap_embedding">[docs]</a><span class="k">def</span> <span class="nf">umap_embedding</span><span class="p">(</span>
     <span class="n">data</span><span class="p">,</span> 
