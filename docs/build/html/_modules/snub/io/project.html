@@ -37,8 +37,8 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../api.html">snub.io</a></li>
 </ul>
 
@@ -75,6 +75,7 @@
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">import</span> <span class="nn">pickle</span>
 <span class="kn">import</span> <span class="nn">colorsys</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
 <span class="kn">from</span> <span class="nn">vidio</span> <span class="kn">import</span> <span class="n">VideoReader</span>
 
 <div class="viewcode-block" id="generate_intervals"><a class="viewcode-back" href="../../../api.html#snub.io.project.generate_intervals">[docs]</a><span class="k">def</span> <span class="nf">generate_intervals</span><span class="p">(</span><span class="n">start_time</span><span class="p">,</span> <span class="n">binsize</span><span class="p">,</span> <span class="n">num_intervals</span><span class="p">):</span>
@@ -130,7 +131,7 @@
 <span class="sd">    overwrite : bool, default=False</span>
 <span class="sd">        If a config.json file already exists in the project directory,</span>
 <span class="sd">        overwrite=True will cause the file to be overwritten. To edit</span>
-<span class="sd">        but not overwrite an existing config file, use :py:func:`snub.io.project.edit_config`.</span>
+<span class="sd">        but not overwrite an existing config file, use :py:func:`snub.io.edit_config`.</span>
 <span class="sd">        </span>
 <span class="sd">    start_time : float, default=0</span>
 <span class="sd">        Lower bound (in seconds) of the timeline in the SNUB browser.</span>
@@ -204,7 +205,7 @@
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;The directory </span><span class="si">{}</span><span class="s1"> already exists. The config file will be overwritten, but existing data files will be left in place.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">project_directory</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
-                <span class="s1">&#39;This project already exists. Set `overwrite=True` or use `snub.io.project.edit_config`&#39;</span>
+                <span class="s1">&#39;This project already exists. Set `overwrite=True` or use `snub.io.edit_config`&#39;</span>
             <span class="p">)</span>
     <span class="k">if</span> <span class="n">duration</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">end_time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
@@ -212,14 +213,14 @@
         <span class="p">)</span>
     <span class="k">elif</span> <span class="n">duration</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">end_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">duration</span> <span class="o">!=</span> <span class="p">(</span><span class="n">end_time</span><span class="o">-</span><span class="n">start_time</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
-            <span class="s1">&#39;`duration=</span><span class="si">{}</span><span class="s1">` is inconsistent with `start_time-end_time=</span><span class="si">{}</span><span class="s1">`&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">duration</span><span class="p">,</span> <span class="n">end_time</span><span class="o">-</span><span class="n">start_time</span><span class="p">)</span>
+            <span class="s1">&#39;`duration=</span><span class="si">{}</span><span class="s1">` is inconsistent with `end_time-start_time=</span><span class="si">{}</span><span class="s1">`&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">duration</span><span class="p">,</span> <span class="n">end_time</span><span class="o">-</span><span class="n">start_time</span><span class="p">)</span>
         <span class="p">)</span>
         
     <span class="c1"># create the config file</span>
     <span class="k">if</span> <span class="n">end_time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">end_time</span> <span class="o">=</span> <span class="n">start_time</span> <span class="o">+</span> <span class="n">duration</span>
     <span class="k">if</span> <span class="n">init_current_time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">init_current_time</span> <span class="o">=</span> <span class="n">start_time</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">end_time</span><span class="o">-</span><span class="n">start_time</span><span class="p">)</span><span class="o">/</span><span class="n">min_step</span> <span class="o">&gt;</span> <span class="mi">200000</span><span class="p">:</span> 
-        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;min_step=</span><span class="si">{}</span><span class="s1"> is too small for the total duration </span><span class="si">{}</span><span class="s1">. The maximum allowed ratio of `duration/min_step` is 200,000&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">min_step</span><span class="p">,</span> <span class="n">start_time</span><span class="o">-</span><span class="n">end_time</span><span class="p">))</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;min_step=</span><span class="si">{}</span><span class="s1"> is too small for the total duration </span><span class="si">{}</span><span class="s1">. The maximum allowed ratio of `duration/min_step` is 200,000&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">min_step</span><span class="p">,</span> <span class="n">end_time</span><span class="o">-</span><span class="n">start_time</span><span class="p">))</span>
 
     <span class="n">config</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s1">&#39;bounds&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">start_time</span><span class="p">,</span><span class="n">end_time</span><span class="p">],</span>
@@ -239,6 +240,7 @@
         <span class="s1">&#39;heatmap&#39;</span><span class="p">:[],</span>
         <span class="s1">&#39;spikeplot&#39;</span><span class="p">:[],</span>
         <span class="s1">&#39;traceplot&#39;</span><span class="p">:[],</span>
+        <span class="s1">&#39;roiplot&#39;</span><span class="p">:[],</span>
     <span class="p">}</span>
         
     <span class="c1"># create the project directory and config file</span>
@@ -255,7 +257,7 @@
     <span class="n">config_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_directory</span><span class="p">,</span> <span class="s1">&#39;config.json&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">config_path</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
-            <span class="s1">&#39;There is no config file in the project directory. Use `snub.io.project.create_project` to create a new config file&#39;</span><span class="p">)</span>
+            <span class="s1">&#39;There is no config file in the project directory. Use `snub.io.create_project` to create a new config file&#39;</span><span class="p">)</span>
         
     <span class="n">config</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">config_path</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">config</span></div>
@@ -292,7 +294,7 @@
     <span class="n">index</span> <span class="o">=</span> <span class="n">_get_named_dataview_index</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">dataview_type</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
-            <span class="s1">&#39;There is already a </span><span class="si">{}</span><span class="s1"> with the name &quot;</span><span class="si">{}</span><span class="s1">&quot;. Use `snub.io.project.edit_dataview_properties to change its properties, or remove using `snub.io.project.remove_dataview`&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dataview_type</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
+            <span class="s1">&#39;There is already a </span><span class="si">{}</span><span class="s1"> with the name &quot;</span><span class="si">{}</span><span class="s1">&quot;. Use `snub.io.edit_dataview_properties to change its properties, or remove using `snub.io.remove_dataview`&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dataview_type</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
     
     
 <span class="k">def</span> <span class="nf">_random_color</span><span class="p">():</span>
@@ -592,6 +594,7 @@
     <span class="n">_confirm_no_existing_dataview</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;traceplot&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
     
     <span class="c1"># choose random colors for traces that werent assigned a color</span>
+    <span class="n">trace_colors</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">trace_colors</span><span class="p">)</span>
     <span class="n">unassigned_traces</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">traces</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">trace_colors</span><span class="p">]</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Assigning random colors to traces&#39;</span><span class="p">,</span><span class="n">unassigned_traces</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">unassigned_traces</span><span class="p">:</span> <span class="n">trace_colors</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">_random_color</span><span class="p">()</span>
@@ -627,8 +630,8 @@
     <span class="n">time_intervals</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">binsize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">start_time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">features</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">feature_labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">variables</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">variable_labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">colormap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">,</span>
     <span class="n">xlim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
     <span class="n">ylim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
@@ -673,16 +676,16 @@
 <span class="sd">        with the scatter plot. ``start_time`` is used in conjunction with</span>
 <span class="sd">        ``binsize`` to construct the time interval for each point. </span>
 <span class="sd">        </span>
-<span class="sd">    features: ndarray, default=None</span>
-<span class="sd">        Variables to use for coloring nodes in the scatter plot. ``features``</span>
+<span class="sd">    variables: ndarray, default=None</span>
+<span class="sd">        Variables to use for coloring nodes in the scatter plot. ``variables``</span>
 <span class="sd">        should be a numpy array of shape (N,M) where N is the number of nodes</span>
-<span class="sd">        and M is the number of features. ``feature_labels`` must be specified as well. </span>
+<span class="sd">        and M is the number of variables. ``variable_labels`` must be specified as well. </span>
 <span class="sd">        </span>
-<span class="sd">    feature_labels: list(str), default=None</span>
-<span class="sd">        Label corresponding to each column of ``features``.</span>
+<span class="sd">    variable_labels: list(str), default=None</span>
+<span class="sd">        Label corresponding to each column of ``variables``.</span>
 <span class="sd">        </span>
 <span class="sd">    colormap: str, default=&#39;viridis&#39;</span>
-<span class="sd">        Colormap used for plotting `features` (must be one of the</span>
+<span class="sd">        Colormap used for plotting `variables` (must be one of the</span>
 <span class="sd">        colormaps in matplotlib).</span>
 <span class="sd">        </span>
 <span class="sd">    xlim, ylim: [float, float], default=None</span>
@@ -753,14 +756,14 @@
         <span class="n">time_intervals</span> <span class="o">=</span> <span class="n">generate_intervals</span><span class="p">(</span><span class="n">start_time</span><span class="p">,</span> <span class="n">binsize</span><span class="p">,</span> <span class="n">num_points</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Initializing time intervals using start_time=</span><span class="si">{}</span><span class="s1"> and binsize=</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">start_time</span><span class="p">,</span> <span class="n">binsize</span><span class="p">))</span>
     
-    <span class="c1"># initialize features:</span>
-    <span class="k">if</span> <span class="n">features</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">feature_labels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">features</span><span class="p">,</span><span class="n">feature_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">num_points</span><span class="p">,</span><span class="mi">0</span><span class="p">)),[]</span>
-    <span class="k">elif</span> <span class="n">features</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">feature_labels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;``features`` and ``feature_labels`` must both be specified&#39;</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">feature_labels</span><span class="p">)</span> <span class="o">!=</span> <span class="n">features</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;The length of ``features_labels`` must match the number of columns in ``features``&#39;</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">features</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">num_points</span><span class="p">:</span> <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;``features`` must have the same number of rows as `xy_coordinates`&#39;</span><span class="p">)</span>
+    <span class="c1"># initialize variables:</span>
+    <span class="k">if</span> <span class="n">variables</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">variable_labels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">variables</span><span class="p">,</span><span class="n">variable_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">num_points</span><span class="p">,</span><span class="mi">0</span><span class="p">)),[]</span>
+    <span class="k">elif</span> <span class="n">variables</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">variable_labels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;``variables`` and ``variable_labels`` must both be specified&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">variable_labels</span><span class="p">)</span> <span class="o">!=</span> <span class="n">variables</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;The length of ``variables_labels`` must match the number of columns in ``variables``&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">variables</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">num_points</span><span class="p">:</span> <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;``variables`` must have the same number of rows as `xy_coordinates`&#39;</span><span class="p">)</span>
     
-    <span class="c1"># save coordinatesm, time intervals and features</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">xy_coordinates</span><span class="p">,</span> <span class="n">time_intervals</span><span class="p">,</span> <span class="n">features</span><span class="p">))</span>
+    <span class="c1"># save coordinatesm, time intervals and variables</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">xy_coordinates</span><span class="p">,</span> <span class="n">time_intervals</span><span class="p">,</span> <span class="n">variables</span><span class="p">))</span>
     <span class="n">data_path</span> <span class="o">=</span> <span class="n">name</span><span class="o">+</span><span class="s1">&#39;.scatter_data.npy&#39;</span>
     <span class="n">data_path_abs</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_directory</span><span class="p">,</span><span class="n">data_path</span><span class="p">)</span>
     <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">data_path_abs</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
@@ -775,7 +778,7 @@
         <span class="s1">&#39;facecolor&#39;</span><span class="p">:</span> <span class="n">facecolor</span><span class="p">,</span>
         <span class="s1">&#39;edgecolor&#39;</span><span class="p">:</span> <span class="n">edgecolor</span><span class="p">,</span>
         <span class="s1">&#39;colormap&#39;</span><span class="p">:</span> <span class="n">colormap</span><span class="p">,</span>
-        <span class="s1">&#39;feature_labels&#39;</span><span class="p">:</span><span class="n">feature_labels</span><span class="p">,</span>
+        <span class="s1">&#39;variable_labels&#39;</span><span class="p">:</span><span class="n">variable_labels</span><span class="p">,</span>
         <span class="s1">&#39;selected_edgecolor&#39;</span><span class="p">:</span> <span class="n">selected_edgecolor</span><span class="p">,</span>
         <span class="s1">&#39;current_node_size&#39;</span><span class="p">:</span> <span class="n">current_node_size</span><span class="p">,</span>
         <span class="s1">&#39;current_node_color&#39;</span><span class="p">:</span> <span class="n">current_node_color</span><span class="p">,</span>
@@ -802,7 +805,7 @@
     <span class="n">start_time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">sort_method</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">show_labels</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">initial_show_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">max_label_width</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> 
     <span class="n">label_color</span><span class="o">=</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">),</span>
     <span class="n">label_font_size</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> 
@@ -813,12 +816,13 @@
     <span class="n">trace_height_ratio</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
     <span class="n">heatmap_height_ratio</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
     <span class="n">order</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">rois</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">):</span>
     
     <span class="sd">&quot;&quot;&quot;Add a heatmap to your SNUB project.</span>
 <span class="sd">    If plotting neural data, it is helpful to sort the rows of the heatmap</span>
 <span class="sd">    so that correlated neurons are clustered together (use the ``sort_method``</span>
-<span class="sd">    argument; see :py:func:`snub.io.manifold.sort` for options).</span>
+<span class="sd">    argument; see :py:func:`snub.io.sort` for options).</span>
 <span class="sd">    </span>
 <span class="sd">    </span>
 <span class="sd">    Parameters</span>
@@ -849,36 +853,31 @@
 <span class="sd">        heatmap. ``start_time`` is used in conjunction with</span>
 <span class="sd">        ``binsize`` to construct the time interval for each column.</span>
 <span class="sd">        </span>
-<span class="sd">        </span>
 <span class="sd">    sort_method: str/ndarray, default=None</span>
 <span class="sd">        Method for sorting the rows of the heatmap. ``sort_method`` can </span>
 <span class="sd">        either be an array directly specifying the row order or a str</span>
-<span class="sd">        defining a sort method from :py:func:`snub.io.manifold.sort`.</span>
+<span class="sd">        defining a sort method from :py:func:`snub.io.sort`.</span>
 <span class="sd">        If ``sort_method=None``, the original ordering of the rows will be used.</span>
 <span class="sd">        </span>
 <span class="sd">    labels: list of str, default=None</span>
-<span class="sd">        Labels for each variable (row) in the heatmap. If ``show_labels=True``,</span>
-<span class="sd">        the labels are rendered within SNUB. If ``add_traceplot=True``, the </span>
-<span class="sd">        labels are also used to plot specific variables in the trace plot</span>
-<span class="sd">        associated with the heatmap. When no labels are given, they</span>
-<span class="sd">        default to the integer order of each row. If the elements of ``labels``</span>
-<span class="sd">        are not unique, their integer order is prepended. </span>
+<span class="sd">        Labels for each variable (row) in the heatmap.  If ``add_traceplot=True``, </span>
+<span class="sd">        the labels are also used to plot specific variables in the trace plot</span>
+<span class="sd">        associated with the heatmap. When no labels are given, they default</span>
+<span class="sd">        to the integer order of each row. If the elements of ``labels`` are not</span>
+<span class="sd">        unique, their integer order is prepended. </span>
 <span class="sd">        </span>
-<span class="sd">    show_labels: bool, default=False</span>
-<span class="sd">        Determines whether labels are rendered on the left side of the heatmap</span>
-<span class="sd">        in SNUB. It is recommended to leave ``show_labels=False`` when the heatmap</span>
-<span class="sd">        contains a large number of rows. </span>
+<span class="sd">    initial_show_labels: bool, default=True</span>
+<span class="sd">        Determines whether row labels are initially visible.</span>
 <span class="sd">        </span>
 <span class="sd">    max_label_width: int, default=300</span>
-<span class="sd">        If ``show_labels=True``, ``max_label_width`` determines how far</span>
-<span class="sd">        the label text can encroach on the heatmap (in pixels). This </span>
-<span class="sd">        is only relevant if any of the labels are really long. </span>
+<span class="sd">        How far the label text can encroach on the heatmap (in pixels). </span>
+<span class="sd">        This is only relevant if any of the labels are really long. </span>
 <span class="sd">    </span>
 <span class="sd">    label_color: (int,int,int), default=(255,255,255)</span>
-<span class="sd">        Color of the labels superimposed on the heatmap if ``show_labels=True``. </span>
+<span class="sd">        Color of the labels superimposed on the heatmap. </span>
 <span class="sd">    </span>
 <span class="sd">    label_font_size: int, default=12</span>
-<span class="sd">        Size of the labels superimposed on the heatmap if ``show_labels=True``. </span>
+<span class="sd">        Size of the labels superimposed on the heatmap. </span>
 <span class="sd">    </span>
 <span class="sd">    colormap: str, default=&#39;viridis&#39;</span>
 <span class="sd">        Colormap used for rendering the heatmap values. The colormap</span>
@@ -912,6 +911,13 @@
 <span class="sd">        </span>
 <span class="sd">    order: float, default=0</span>
 <span class="sd">        Determines the order of placement within the track-stack.</span>
+
+<span class="sd">    rois: ndarray, default=None</span>
+<span class="sd">        ROI for each row of the heatmap (in same order). Providing this input</span>
+<span class="sd">        will result in the creation of an ``roiplot``. This is useful for heatmaps</span>
+<span class="sd">        that represent calcium imaging data. The shape should be ``(N,H,W)`` where </span>
+<span class="sd">        ``N`` is the number of rows in the heatmap, and ``W,H`` are the width and height</span>
+<span class="sd">        respectively of the window containing the rois. </span>
 <span class="sd">        </span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -961,11 +967,13 @@
     <span class="c1"># save row order</span>
     <span class="k">if</span> <span class="n">sort_method</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">row_order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sort_method</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="kn">from</span> <span class="nn">snub.io.manifold</span> <span class="kn">import</span> <span class="n">sort</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sort_method</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">snub.io</span> <span class="kn">import</span> <span class="n">sort</span>
         <span class="n">row_order</span> <span class="o">=</span> <span class="n">sort</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">sort_method</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="n">sort_method</span><span class="p">]</span>
+        <span class="k">try</span><span class="p">:</span> 
+            <span class="n">data</span><span class="p">[</span><span class="n">sort_method</span><span class="p">]</span>
+            <span class="n">row_order</span> <span class="o">=</span> <span class="n">sort_method</span>
         <span class="k">except</span><span class="p">:</span> <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
             <span class="s1">&#39;`sort_order` must be None, a string, or a valid index that can be used in `data[sort_method]`&#39;</span><span class="p">)</span>
     <span class="n">row_order_path</span> <span class="o">=</span> <span class="n">name</span><span class="o">+</span><span class="s1">&#39;.heatmap_row_order.npy&#39;</span>
@@ -977,22 +985,24 @@
     <span class="kn">import</span> <span class="nn">cmapy</span>
     <span class="k">try</span><span class="p">:</span> <span class="n">cmapy</span><span class="o">.</span><span class="n">cmap</span><span class="p">(</span><span class="n">colormap</span><span class="p">)</span>
     <span class="k">except</span><span class="p">:</span> <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
-        <span class="s1">&#39;&quot;&quot;</span><span class="si">{}</span><span class="s1">&quot;&quot; is not a valid colormap. See https://matplotlib.org/stable/gallery/color/colormap_reference.html for a list of options&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">colormap</span><span class="p">))</span>
-        
+        <span class="s1">&#39;&quot;&quot;</span><span class="si">{}</span><span class="s1">&quot;&quot; is not a valid colormap. See https://matplotlib.org/stable/gallery/color/colormap_reference.html for a list of options&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">colormap</span><span class="p">))</span> 
     <span class="k">if</span> <span class="n">vmin</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> 
         <span class="n">vmin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span><span class="mi">1</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Set vmin to </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">vmin</span><span class="p">))</span>
     <span class="k">if</span> <span class="n">vmax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> 
         <span class="n">vmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span><span class="mi">99</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Set vmax to </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">vmax</span><span class="p">))</span>
-        
+
+    <span class="c1"># generare random colors for traceplot or roiplot</span>
+    <span class="n">row_colors</span> <span class="o">=</span> <span class="p">[</span><span class="n">_random_color</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
+
     <span class="c1"># add props to config</span>
     <span class="n">props</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
         <span class="s1">&#39;data_path&#39;</span><span class="p">:</span> <span class="n">data_path</span><span class="p">,</span>
         <span class="s1">&#39;intervals_path&#39;</span><span class="p">:</span><span class="n">intervals_path</span><span class="p">,</span>
         <span class="s1">&#39;labels_path&#39;</span><span class="p">:</span> <span class="n">labels_path</span><span class="p">,</span>
-        <span class="s1">&#39;show_labels&#39;</span><span class="p">:</span> <span class="n">show_labels</span><span class="p">,</span>
+        <span class="s1">&#39;initial_show_labels&#39;</span><span class="p">:</span> <span class="n">initial_show_labels</span><span class="p">,</span>
         <span class="s1">&#39;row_order_path&#39;</span><span class="p">:</span> <span class="n">row_order_path</span><span class="p">,</span>
         <span class="s1">&#39;max_label_width&#39;</span><span class="p">:</span> <span class="n">max_label_width</span><span class="p">,</span>
         <span class="s1">&#39;label_color&#39;</span><span class="p">:</span> <span class="n">label_color</span><span class="p">,</span>
@@ -1005,10 +1015,22 @@
         <span class="s1">&#39;heatmap_height_ratio&#39;</span><span class="p">:</span><span class="n">heatmap_height_ratio</span><span class="p">,</span>
         <span class="s1">&#39;trace_height_ratio&#39;</span><span class="p">:</span><span class="n">trace_height_ratio</span><span class="p">,</span>
         <span class="s1">&#39;order&#39;</span><span class="p">:</span> <span class="n">order</span><span class="p">,</span>
+        <span class="s1">&#39;row_colors&#39;</span><span class="p">:</span> <span class="n">row_colors</span><span class="p">,</span>
+        <span class="s1">&#39;bound_rois&#39;</span> <span class="p">:</span> <span class="s1">&#39;&#39;</span> <span class="k">if</span> <span class="n">rois</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">name</span>
     <span class="p">}</span>
+
+
     <span class="n">config</span><span class="p">[</span><span class="s1">&#39;heatmap&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">props</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Added heatmap &quot;</span><span class="si">{}</span><span class="s1">&quot;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
     <span class="n">save_config</span><span class="p">(</span><span class="n">project_directory</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+
+    <span class="c1"># add roi plot if rois are given</span>
+    <span class="k">if</span> <span class="n">rois</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">rois</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;The number of ROIs must match the number of heatmap rows&#39;</span>
+        <span class="n">add_roiplot</span><span class="p">(</span><span class="n">project_directory</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">data_path</span><span class="p">,</span> <span class="n">rois</span><span class="p">,</span> 
+            <span class="n">time_intervals</span><span class="o">=</span><span class="n">intervals_path</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">,</span>
+            <span class="n">contour_colors</span><span class="o">=</span><span class="p">{</span><span class="n">l</span><span class="p">:</span><span class="n">c</span> <span class="k">for</span> <span class="n">l</span><span class="p">,</span><span class="n">c</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span><span class="n">row_colors</span><span class="p">)})</span>
+
     <span class="k">return</span> <span class="n">props</span></div>
     
     
@@ -1022,7 +1044,7 @@
     <span class="n">window_step</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span>
     <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">sort_method</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">show_labels</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">initial_show_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">max_label_width</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> 
     <span class="n">label_color</span><span class="o">=</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">),</span>
     <span class="n">label_font_size</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> 
@@ -1037,13 +1059,13 @@
     <span class="sd">&quot;&quot;&quot;Add a spike plot to your SNUB project.</span>
 <span class="sd">    By default, spike plots convert to heatmaps when sufficiently zoomed out.</span>
 <span class="sd">    For electrophysiology, this corresponds to showing firing *rates* as</span>
-<span class="sd">    opposed to firing *events* (see :py:func:`snub.io.manifold.firing_rates`).</span>
-<span class="sd">    Most of the options for :py:func:`snub.io.project.add_heatmap` </span>
+<span class="sd">    opposed to firing *events* (see :py:func:`snub.io.firing_rates`).</span>
+<span class="sd">    Most of the options for :py:func:`snub.io.add_heatmap` </span>
 <span class="sd">    can also be used here. </span>
 <span class="sd">    </span>
 <span class="sd">    If plotting neural data, it is helpful to sort the rows</span>
 <span class="sd">    so that correlated neurons are clustered together (use the ``sort_method``</span>
-<span class="sd">    argument; see :py:func:`snub.io.manifold.sort` for options; the firing</span>
+<span class="sd">    argument; see :py:func:`snub.io.sort` for options; the firing</span>
 <span class="sd">    rates are used for sorting).</span>
 <span class="sd">    </span>
 <span class="sd">    Parameters</span>
@@ -1093,7 +1115,7 @@
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Saved spike data to &#39;</span><span class="o">+</span><span class="n">spikes_path_abs</span><span class="p">)</span>
     
     <span class="c1"># save heatmap</span>
-    <span class="kn">from</span> <span class="nn">snub.io.manifold</span> <span class="kn">import</span> <span class="n">firing_rates</span>
+    <span class="kn">from</span> <span class="nn">snub.io</span> <span class="kn">import</span> <span class="n">firing_rates</span>
     <span class="n">heatmap_data</span><span class="p">,</span> <span class="n">start_time</span> <span class="o">=</span> <span class="n">firing_rates</span><span class="p">(</span><span class="n">spike_times</span><span class="p">,</span> <span class="n">spike_labels</span><span class="p">,</span> <span class="n">window_size</span><span class="o">=</span><span class="n">window_size</span><span class="p">,</span> <span class="n">window_step</span><span class="o">=</span><span class="n">window_step</span><span class="p">)</span>
     <span class="n">heatmap_path</span> <span class="o">=</span> <span class="n">name</span><span class="o">+</span><span class="s1">&#39;.spikeplot_heatmap.npy&#39;</span>
     <span class="n">heatmap_path_abs</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_directory</span><span class="p">,</span><span class="n">heatmap_path</span><span class="p">)</span>
@@ -1128,7 +1150,7 @@
     <span class="k">if</span> <span class="n">sort_method</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">row_order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">heatmap_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sort_method</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="kn">from</span> <span class="nn">snub.io.manifold</span> <span class="kn">import</span> <span class="n">sort</span>
+        <span class="kn">from</span> <span class="nn">snub.io</span> <span class="kn">import</span> <span class="n">sort</span>
         <span class="n">row_order</span> <span class="o">=</span> <span class="n">sort</span><span class="p">(</span><span class="n">heatmap_data</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">sort_method</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">row_order</span> <span class="o">=</span> <span class="n">sort_method</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
@@ -1161,7 +1183,7 @@
         <span class="s1">&#39;intervals_path&#39;</span><span class="p">:</span><span class="n">intervals_path</span><span class="p">,</span>
         <span class="s1">&#39;labels_path&#39;</span><span class="p">:</span> <span class="n">labels_path</span><span class="p">,</span>
         <span class="s1">&#39;row_order_path&#39;</span><span class="p">:</span> <span class="n">row_order_path</span><span class="p">,</span>
-        <span class="s1">&#39;show_labels&#39;</span><span class="p">:</span> <span class="n">show_labels</span><span class="p">,</span>
+        <span class="s1">&#39;initial_show_labels&#39;</span><span class="p">:</span> <span class="n">initial_show_labels</span><span class="p">,</span>
         <span class="s1">&#39;max_label_width&#39;</span><span class="p">:</span> <span class="n">max_label_width</span><span class="p">,</span>
         <span class="s1">&#39;label_color&#39;</span><span class="p">:</span> <span class="n">label_color</span><span class="p">,</span>
         <span class="s1">&#39;label_font_size&#39;</span><span class="p">:</span><span class="n">label_font_size</span><span class="p">,</span>
@@ -1179,7 +1201,196 @@
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Added spike plot &quot;</span><span class="si">{}</span><span class="s1">&quot;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
     <span class="n">save_config</span><span class="p">(</span><span class="n">project_directory</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">props</span></div>
+
+
+
+<div class="viewcode-block" id="add_roiplot"><a class="viewcode-back" href="../../../api.html#snub.io.project.add_roiplot">[docs]</a><span class="k">def</span> <span class="nf">add_roiplot</span><span class="p">(</span>
+    <span class="n">project_directory</span><span class="p">,</span>
+    <span class="n">name</span><span class="p">,</span>
+    <span class="n">data</span><span class="p">,</span>
+    <span class="n">rois</span><span class="p">,</span>
+    <span class="n">time_intervals</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">binsize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">start_time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">sort_method</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">contour_colors</span><span class="o">=</span><span class="p">{},</span>
+    <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">colormap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> 
+    <span class="n">vmin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">height_ratio</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">order</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+<span class="p">):</span>
     
+    <span class="sd">&quot;&quot;&quot;Add an ROI plot to your SNUB project. In a typical use case this method </span>
+<span class="sd">    will be called by :py:func:`snub.io.create_heatmap` (rather than the user).</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    project_directory : str </span>
+<span class="sd">        Project that the ROI plot should be added to.</span>
+<span class="sd">        </span>
+<span class="sd">    name: str</span>
+<span class="sd">        The name of the ROI plot displayed in SNUB and used</span>
+<span class="sd">        for editing the config file. </span>
+<span class="sd">        </span>
+<span class="sd">    data : ndarray | str</span>
+<span class="sd">        2D array where rows are variables and columns are time bins.</span>
+<span class="sd">        Can be the array itself or the relative path to a npy file.</span>
+
+<span class="sd">    rois: ndarray, default=None</span>
+<span class="sd">        ROI shapes as ``(N,H,W)`` array where ``N`` is the number of rows </span>
+<span class="sd">        in the heatmap, and ``W,H`` are the width and height respectively </span>
+<span class="sd">        of the window containing the rois.  </span>
+
+<span class="sd">    time_intervals : ndarray | str, default=None</span>
+<span class="sd">        Time interval (in seconds) associated with each column of the data array, </span>
+<span class="sd">        given as a ``(N,2)`` array with ``[start,end]`` in each row. If </span>
+<span class="sd">        ``time_intervals=None``, then values for ``binsize`` and ``start_time`` </span>
+<span class="sd">        must be given. ``time_intervals`` can also be a string, in which case</span>
+<span class="sd">        it should be the relative path to a npy file. </span>
+
+<span class="sd">    binsize: float, default=None</span>
+<span class="sd">        Uniform time interval (in seconds) associated with each column of the</span>
+<span class="sd">        data array. It is assumed that the intervals have no gaps or overlaps. </span>
+<span class="sd">        If this is not the case, use the ``time_intervals`` argument. </span>
+<span class="sd">        </span>
+<span class="sd">    start_time: float, default=None</span>
+<span class="sd">        Start time (in seconds) of the earliest time interval in the data</span>
+<span class="sd">        array. ``start_time`` is used in conjunction with ``binsize`` to </span>
+<span class="sd">        construct the time interval for each column of the data array.</span>
+<span class="sd">                </span>
+<span class="sd">    labels: list of str | str, default=None</span>
+<span class="sd">        Label for each ROI. If a list, then labels in the list will be used.</span>
+<span class="sd">        Can also be a string containing the relative path to a labels file. </span>
+<span class="sd">        If the ROI plot is bound to a heatmap, the labels are used to establish </span>
+<span class="sd">        correspondence between the ROIs and the rows of the heatmap. When no </span>
+<span class="sd">        labels are given, they default to the integer order of each row. If </span>
+<span class="sd">        the elements of ``labels`` are not unique, their integer order is </span>
+<span class="sd">        prepended. </span>
+
+<span class="sd">    contour_colors: dict, default={}</span>
+<span class="sd">        To assign specific colors to any of the ROIs when plotting contours, </span>
+<span class="sd">        use ``contour_colors[label] = (r,g,b)``, where r,g,b are ints [0-255].</span>
+<span class="sd">    </span>
+<span class="sd">    linewidth: int, default=1</span>
+<span class="sd">        Linewidth for plotting the contours outlining each ROI</span>
+<span class="sd">    </span>
+<span class="sd">    colormap: str, default=&#39;viridis&#39;</span>
+<span class="sd">        Colormap used for rendering the ROI composite values. Colormap</span>
+<span class="sd">        names must be compatible with vispy. </span>
+<span class="sd">        </span>
+<span class="sd">    vmin: float, default=0</span>
+<span class="sd">        Floor for the colormap. If ``vmin=None``, it will be set to to the 1st percentile</span>
+<span class="sd">        of the data values. This parameter can be adjusted within the browser.</span>
+<span class="sd">    </span>
+<span class="sd">    vmax: float, default=None</span>
+<span class="sd">        Ceiling for the colormap. If ``vmax=None``, it will be set to to the 99th percentile</span>
+<span class="sd">        of the data values. This parameter can be adjusted within the browser.</span>
+<span class="sd">    </span>
+<span class="sd">    height_ratio: int, default=1</span>
+<span class="sd">        The relative height initially allocated to this data-view in the panel-stack.</span>
+<span class="sd">        Spacing can also be adjusted within the browser. </span>
+<span class="sd">        </span>
+<span class="sd">    order: float, default=0</span>
+<span class="sd">        Determines the order of placement within the panel-stack.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    props: dict</span>
+<span class="sd">        ROI plot properties</span>
+<span class="sd">    &quot;&quot;&quot;</span>    
+
+    <span class="c1"># check that project exists and a ROI plot with the given name does not already exist</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">(</span><span class="n">project_directory</span><span class="p">)</span>
+    <span class="n">_confirm_no_existing_dataview</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;roiplot&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+    
+    <span class="c1"># load/save data</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="nb">str</span><span class="p">):</span>
+        <span class="n">data_path</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_directory</span><span class="p">,</span><span class="n">data_path</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">data_path</span> <span class="o">=</span> <span class="n">name</span><span class="o">+</span><span class="s1">&#39;.roi_data.npy&#39;</span>
+        <span class="n">data_path_abs</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_directory</span><span class="p">,</span><span class="n">data_path</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">data_path_abs</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Saved ROI data to &#39;</span><span class="o">+</span><span class="n">data_path_abs</span><span class="p">)</span>
+
+    <span class="c1"># save rois</span>
+    <span class="n">rois_path</span> <span class="o">=</span> <span class="n">name</span><span class="o">+</span><span class="s1">&#39;.rois.npy&#39;</span>
+    <span class="n">rois_path_abs</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_directory</span><span class="p">,</span><span class="n">rois_path</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">rois_path_abs</span><span class="p">,</span> <span class="n">rois</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Saved ROIs to &#39;</span><span class="o">+</span><span class="n">rois_path_abs</span><span class="p">)</span>
+
+    <span class="c1"># initialize/save time intervals</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">time_intervals</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">intervals_path</span> <span class="o">=</span> <span class="n">time_intervals</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">time_intervals</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> 
+            <span class="k">if</span> <span class="n">binsize</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">start_time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
+                    <span class="s1">&#39;Either a `time_intervals` must be given or `binsize` and `start_time` must be specified&#39;</span><span class="p">)</span>
+            <span class="n">time_intervals</span> <span class="o">=</span> <span class="n">generate_intervals</span><span class="p">(</span><span class="n">start_time</span><span class="p">,</span> <span class="n">binsize</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Initializing time intervals using start_time=</span><span class="si">{}</span><span class="s1"> and binsize=</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">start_time</span><span class="p">,</span> <span class="n">binsize</span><span class="p">))</span>
+        
+        <span class="n">intervals_path</span> <span class="o">=</span> <span class="n">name</span><span class="o">+</span><span class="s1">&#39;.heatmap_intervals.npy&#39;</span>
+        <span class="n">intervals_path_abs</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_directory</span><span class="p">,</span><span class="n">intervals_path</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">intervals_path_abs</span><span class="p">,</span> <span class="n">time_intervals</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Saved time intervals to &#39;</span><span class="o">+</span><span class="n">intervals_path_abs</span><span class="p">)</span>
+
+    <span class="c1"># save labels</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span><span class="nb">str</span><span class="p">):</span>
+        <span class="n">labels_path</span> <span class="o">=</span> <span class="n">labels</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_directory</span><span class="p">,</span><span class="n">labels_path</span><span class="p">))</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">labels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> 
+            <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Creating labels from data row ordering&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="o">!=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
+                <span class="s1">&#39;The length of `labels` (</span><span class="si">{}</span><span class="s1">) does not match the number of rows in the heatmap (</span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">),</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">labels</span><span class="p">))</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;labels are not unique: prepending integers&#39;</span><span class="p">)</span>
+            <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;:&#39;</span><span class="o">+</span><span class="n">l</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">l</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">labels</span><span class="p">)]</span>
+            
+        <span class="n">labels_path</span> <span class="o">=</span> <span class="n">name</span><span class="o">+</span><span class="s1">&#39;.heatmap_labels.txt&#39;</span>
+        <span class="n">labels_path_abs</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_directory</span><span class="p">,</span><span class="n">labels_path</span><span class="p">)</span>
+        <span class="nb">open</span><span class="p">(</span><span class="n">labels_path_abs</span><span class="p">,</span><span class="s1">&#39;w&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">labels</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Saved labels to &#39;</span><span class="o">+</span><span class="n">labels_path_abs</span><span class="p">)</span>
+
+    <span class="c1"># choose random colors for ROIs that werent assigned a color</span>
+    <span class="n">contour_colors</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">contour_colors</span><span class="p">)</span>
+    <span class="n">unassigned_rois</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">labels</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">contour_colors</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Assigning random colors to rois&#39;</span><span class="p">,</span><span class="n">unassigned_rois</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">unassigned_rois</span><span class="p">:</span> <span class="n">contour_colors</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">_random_color</span><span class="p">()</span>
+        
+    <span class="c1"># assign vmin and vmax</span>
+    <span class="k">if</span> <span class="n">vmin</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> 
+        <span class="n">vmin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span><span class="mi">1</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Set vmin to </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">vmin</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">vmax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> 
+        <span class="n">vmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span><span class="mi">99</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Set vmax to </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">vmax</span><span class="p">))</span>
+
+    <span class="c1"># add props to config</span>
+    <span class="n">props</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+        <span class="s1">&#39;data_path&#39;</span><span class="p">:</span> <span class="n">data_path</span><span class="p">,</span>
+        <span class="s1">&#39;rois_path&#39;</span> <span class="p">:</span> <span class="n">rois_path</span><span class="p">,</span>
+        <span class="s1">&#39;intervals_path&#39;</span><span class="p">:</span><span class="n">intervals_path</span><span class="p">,</span>
+        <span class="s1">&#39;labels_path&#39;</span><span class="p">:</span> <span class="n">labels_path</span><span class="p">,</span>
+        <span class="s1">&#39;contour_colors&#39;</span><span class="p">:</span><span class="n">contour_colors</span><span class="p">,</span>
+        <span class="s1">&#39;colormap&#39;</span><span class="p">:</span><span class="n">colormap</span><span class="p">,</span>
+        <span class="s1">&#39;vmin&#39;</span><span class="p">:</span><span class="n">vmin</span><span class="p">,</span>
+        <span class="s1">&#39;vmax&#39;</span><span class="p">:</span><span class="n">vmax</span><span class="p">,</span>
+        <span class="s1">&#39;linewidth&#39;</span><span class="p">:</span><span class="n">linewidth</span><span class="p">,</span>
+        <span class="s1">&#39;height_ratio&#39;</span><span class="p">:</span> <span class="n">height_ratio</span><span class="p">,</span>
+        <span class="s1">&#39;order&#39;</span><span class="p">:</span> <span class="n">order</span>
+    <span class="p">}</span>
+    <span class="n">config</span><span class="p">[</span><span class="s1">&#39;roiplot&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">props</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Added roiplot &quot;</span><span class="si">{}</span><span class="s1">&quot;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+    <span class="n">save_config</span><span class="p">(</span><span class="n">project_directory</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">props</span></div>
+
 
 
 <div class="viewcode-block" id="add_mesh"><a class="viewcode-back" href="../../../api.html#snub.io.project.add_mesh">[docs]</a><span class="k">def</span> <span class="nf">add_mesh</span><span class="p">():</span>

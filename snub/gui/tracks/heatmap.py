@@ -10,6 +10,7 @@ from numba import njit, prange
 
 from snub.gui.tracks import Track, TracePlot, TrackGroup
 from snub.gui.utils import AdjustColormapDialog
+from snub.io.project import _random_color
 
 
 def cvImage_to_Qimage(cvImage):
@@ -38,7 +39,6 @@ class HeatmapImage(Track):
 
     def __init__(self, config, image, start_time, binsize, vertical_range=None, parent=None):
         super().__init__(config, parent=parent)
-        t = time.time()
         self.binsize = binsize
         self.start_time = start_time
         self.downsample_options = self.downsample_ratio**np.arange(self.downsample_powers)
@@ -52,7 +52,7 @@ class HeatmapImage(Track):
             cols = image_data.shape[1]//self.downsample_ratio
             if cols>0: image_data = image_data[:,:cols*self.downsample_ratio].reshape(image_data.shape[0],cols,-1,3).mean(2)
             self.binned_images.append(np.uint8(image_data))
-
+ 
 
     def get_current_pixmap(self):
         ### NOTE: CAN BE ABSTRACTED: SEE SIMILAR TIMELINE METHOD
@@ -86,22 +86,36 @@ class HeatmapImage(Track):
 
 
 class HeatmapLabels(QWidget):
+    display_trace_signal = pyqtSignal(str)
     max_label_height=20
     label_margin=10
 
-    def __init__(self, labels, label_order=None, label_color=(255,255,255), 
-                 label_font_size=12, max_label_width=300, vertical_range=None, parent=None):
+    def __init__(self, labels, label_order=None, label_colors=None, 
+                 max_label_width=300, base_alpha=80, highlighted_alpha=255,
+                 base_font_size=10, highlighted_font_size=20,
+                 vertical_range=None, parent=None):
         super().__init__(parent=parent)
 
-        self.label_color = label_color
-        self.label_font_size = label_font_size
+        self.labels = labels
+        self.label_colors = label_colors
+        if label_order is not None: self.label_order = label_order
+        else: self.label_order = np.arange(len(labels))
+
         self.max_label_width = max_label_width
         if vertical_range is None: vertical_range=[0,len(labels)]
         else: self.vertical_range=vertical_range
 
-        self.labels = labels
-        if label_order is not None: self.label_order = label_order
-        else: self.label_order = np.arange(len(labels))
+        self.base_alpha = base_alpha
+        self.base_font_size = base_font_size
+        self.highlighted_alpha = highlighted_alpha
+        self.highlighted_font_size = highlighted_font_size
+        self.highlighted_labels = set([])
+
+        qm = QFontMetrics(QFont("Helvetica [Cronyx]", self.base_font_size))
+        self.label_widths = [qm.width(l)+self.label_margin*2 for l in labels]
+        self.setMouseTracking(True)
+        self.hover_label = None
+
 
     def update_label_order(self, label_order):
         self.label_order = label_order
@@ -111,28 +125,50 @@ class HeatmapLabels(QWidget):
         self.vertical_range = vrange
         self.update()
 
+    def highlight_labels(self, labels):
+        self.highlighted_labels = set(labels)
+        self.update()
+
+    def label_at_position(self, x, y):
+        height_abs = y/self.height() * (self.vertical_range[1]-self.vertical_range[0])+self.vertical_range[0]
+        i = self.label_order[int(np.clip(height_abs+.5, 0, len(self.label_order)-1))]
+        if x < self.label_widths[i]: return self.labels[i]
+
+    def mouseMoveEvent(self, event): 
+        self.hover_label = self.label_at_position(event.x(), event.y())
+        self.update()
+        event.ignore()
+
+    def mousePressEvent(self, event):
+        label = self.label_at_position(event.x(), event.y())
+        if label is not None: self.display_trace_signal.emit(label)
+        else: event.ignore()
+
     def paintEvent(self, event):
         self.resize(self.parent().size())
-        qp = QPainter(self)
-        qp.setPen(QColor(*self.label_color))
-        qp.setFont(QFont("Helvetica [Cronyx]", self.label_font_size))
+        qp = QPainter(); qp.begin(self)
         for height,i in enumerate(self.label_order):
             height = (height+.5-self.vertical_range[0])/(self.vertical_range[1]-self.vertical_range[0])
             if height > 0 and height < 1:
-                center_height = height*self.height()
-                qp.drawText(self.label_margin, center_height-self.max_label_height//2, 
-                self.max_label_width, self.max_label_height, Qt.AlignVCenter, self.labels[i])
+                if self.labels[i] in self.highlighted_labels or self.labels[i]==self.hover_label:
+                    qp.setFont(QFont("Helvetica [Cronyx]", self.highlighted_font_size, QFont.Bold))
+                    qp.setPen(QColor(*self.label_colors[i], self.highlighted_alpha))
+                else:
+                    qp.setFont(QFont("Helvetica [Cronyx]", self.base_font_size))
+                    qp.setPen(QColor(*self.label_colors[i], self.base_alpha))                    
+                qp.drawText(self.label_margin, height*self.height()-self.max_label_height//2, 
+                    self.max_label_width, self.max_label_height, Qt.AlignVCenter, self.labels[i])
+        qp.end()
 
 
 class Heatmap(Track):
     display_trace_signal = pyqtSignal(str)
     
-    def __init__(self, config, selected_intervals, labels_path=None, data_path=None, row_order_path=None,
-                 intervals_path=None, start_time=0, colormap='viridis', max_label_width=300, 
+    def __init__(self, config, selected_intervals, row_colors=None, labels_path=None, data_path=None, 
+                 intervals_path=None, colormap='viridis', max_label_width=300, row_order_path=None,
                  initial_show_labels=True, label_color=(255,255,255), label_font_size=12, vmin=0, vmax=1, 
                  add_traceplot=False, vertical_range=None, **kwargs):
         super().__init__(config, **kwargs)
-        t = time.time()
         self.selected_intervals = selected_intervals
         self.vmin,self.vmax = vmin,vmax
         self.colormap = colormap
@@ -141,10 +177,12 @@ class Heatmap(Track):
 
         self.data = np.load(os.path.join(config['project_directory'],data_path))
         self.intervals = np.load(os.path.join(config['project_directory'],intervals_path))
-        self.start_time = self.intervals[0,0]
 
         if labels_path is None: self.labels = [str(i) for i in range(self.data.shape[0])]
         else: self.labels = open(os.path.join(config['project_directory'],labels_path),'r').read().split('\n')
+
+        if row_colors is None: row_colors = [_random_color() for i in range(self.data.shape[0])]
+        self.row_colors = row_colors
 
         if row_order_path is None: self.row_order = np.arange(self.data.shape[0])
         else: self.row_order = np.load(os.path.join(config['project_directory'],row_order_path))
@@ -156,10 +194,10 @@ class Heatmap(Track):
         self.adjust_colormap_dialog = AdjustColormapDialog(self, self.vmin, self.vmax)
         self.adjust_colormap_dialog.new_range.connect(self.update_colormap_range)
 
-        self.heatmap_image = HeatmapImage(config, image=self.get_image_data(), start_time=start_time, 
+        self.heatmap_image = HeatmapImage(config, image=self.get_image_data(), start_time=self.intervals[0,0], 
                                           binsize=self.min_step, vertical_range=self.vertical_range, parent=self)
 
-        self.heatmap_labels = HeatmapLabels(self.labels, label_order=self.row_order, label_color=label_color, 
+        self.heatmap_labels = HeatmapLabels(self.labels, label_order=self.row_order, label_colors=row_colors, 
                                             vertical_range=self.vertical_range, max_label_width=max_label_width, parent=self)
         if not initial_show_labels: self.heatmap_labels.hide()
 
@@ -270,15 +308,26 @@ class HeadedHeatmap(TrackGroup):
 
 
 class HeatmapTraceGroup(TrackGroup):
-    def __init__(self, config, selected_intervals, trace_height_ratio=1, 
-                 heatmap_height_ratio=2, height_ratio=1, **kwargs):
+    def __init__(self, config, selected_intervals, trace_height_ratio=1, bound_rois='',
+                 heatmap_height_ratio=2, height_ratio=1, row_colors=None, **kwargs):
 
-        heatmap = Heatmap(config, selected_intervals, height_ratio=heatmap_height_ratio, **kwargs)
 
-        x = heatmap.intervals.mean(1)
-        trace_data = {l:np.vstack((x,d)).T for l,d in zip(heatmap.labels, heatmap.data)}
-        trace = TracePlot(config, height_ratio=trace_height_ratio, data=trace_data, **kwargs)
+
+        heatmap = Heatmap(
+            config, selected_intervals, row_colors=row_colors, 
+            height_ratio=heatmap_height_ratio, **kwargs)
+
+        ts = heatmap.intervals.mean(1)
+        trace = TracePlot(config, height_ratio=trace_height_ratio, bound_rois=bound_rois,
+            data={l:np.vstack((ts,d)).T for l,d in zip(heatmap.labels, heatmap.data)}, 
+            colors={l:c for l,c in zip(heatmap.labels, heatmap.row_colors)}, **kwargs)
+
+        heatmap.display_trace_signal.connect(trace.show_trace)
+        heatmap.heatmap_labels.display_trace_signal.connect(trace.show_trace)
+        trace.visible_traces_signal.connect(heatmap.heatmap_labels.highlight_labels)
+        trace.visible_traces_signal.emit(trace.visible_traces)
 
         super().__init__(config, tracks={'trace':trace, 'heatmap':heatmap}, 
                     track_order=['trace','heatmap'], height_ratio=height_ratio, **kwargs)
-        heatmap.display_trace_signal.connect(trace.show_trace)
+
+

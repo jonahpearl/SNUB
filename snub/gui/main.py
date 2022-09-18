@@ -6,7 +6,8 @@ import numpy as np
 from functools import partial
 from snub.gui.utils import IntervalIndex, CheckBox
 from snub.gui.stacks import PanelStack, TrackStack
-
+from snub.gui.tracks import TracePlot
+import time
 
 
 
@@ -52,7 +53,7 @@ class ProjectTab(QWidget):
         # load config
         self.project_directory = project_directory
         self.layout_mode = None
-
+        t = time.time()
         config_path = os.path.join(self.project_directory,'config.json')
         config = json.load(open(config_path,'r'))
         config,error_messages = self.validate_and_autofill_config(config)
@@ -71,7 +72,7 @@ class ProjectTab(QWidget):
 
         # keep track of current selection
         self.selected_intervals = IntervalIndex(min_step=config['min_step'])
-        
+
         # create major gui elements
         self.panelStack = PanelStack(config, self.selected_intervals)
         self.trackStack = TrackStack(config, self.selected_intervals)
@@ -94,6 +95,10 @@ class ProjectTab(QWidget):
         for panel in self.panelStack.widgets: 
             panel.new_current_time.connect(self.update_current_time)
             panel.selection_change.connect(self.update_selected_intervals)
+        for track in self.trackStack.tracks_flat():
+            if isinstance(track, TracePlot):
+                if track.bound_rois is not None:
+                    track.bind_rois(self.panelStack.get_by_name(track.bound_rois))
         self.timer.timeout.connect(self.increment_current_time)
 
         # initialize layout
@@ -170,10 +175,11 @@ class ProjectTab(QWidget):
             'tracks_size_ratio':2,
             'spikeplot': [],
             'traceplot':[],
+            'roiplot': [],
             'scatter': [],
             'heatmap': [],
+            'pose3D': [],
             'video': [],
-            'mesh': [],
             'markers': {}}
 
         for key,value in default_config.items():
@@ -181,12 +187,12 @@ class ProjectTab(QWidget):
                 config[key] = value
 
         for widget_name, requred_keys in {
-            'heatmap': ['name', 'data_path', 'intervals_path','add_traceplot'],
+            'heatmap': ['name', 'data_path', 'intervals_path', 'add_traceplot'],
             'video': ['name', 'video_path', 'timestamps_path'],
-            'mesh': ['name', 'data_path', 'faces_path', 'timestamps_path'],
             'traceplot': ['name', 'data_path'],
             'spikeplot': ['name', 'heatmap_path', 'spikes_path', 'intervals_path'],
-            'scatter': ['name', 'data_path']
+            'roiplot' : ['name', 'video_paths', 'rois_path', 'timestamps_path'],
+            'scatter': ['name', 'data_path'],
         }.items():
             for props in config[widget_name]:
                 for k in requred_keys:

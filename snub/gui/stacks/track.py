@@ -2,6 +2,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 import numpy as np
+import time
 
 from snub.gui.stacks import Stack
 from snub.gui.tracks import *
@@ -21,9 +22,12 @@ class TrackStack(Stack):
         self.selection_drag_mode = 0 # +1 for shift-click, -1 for command-click
         self.selection_drag_initial_time = None
 
-        self.overlay = TrackOverlay(config, self, selected_intervals)
         self.timeline = Timeline(config)
         self.widgets = [self.timeline]
+
+        self.selection_overlay = SelectionOverlay(config, self, selected_intervals)
+        self.current_time_marker = LineOverlay(config, self, config['init_current_time'])
+        self.overlays = [self.selection_overlay, self.current_time_marker]
 
         for props in config['heatmap']:
             if props['add_traceplot']:
@@ -41,11 +45,14 @@ class TrackStack(Stack):
             track = HeadedTracePlot(config, **props)
             self.widgets.append(track)
 
-        self.timeline.toggle_units_signal.connect(self.overlay.update_time_unit)
+        for w in self.widgets+self.overlays:
+            self.timeline.toggle_units_signal.connect(w.update_time_unit)
+
         self.initUI()
 
     def _time_to_position(self, t):
-        return time_to_position(self.current_range, self.width(), t)
+        p = time_to_position(self.current_range, self.width(), t)
+        return p
 
     def _position_to_time(self, p):
         return position_to_time(self.current_range, self.width(), p)
@@ -61,7 +68,7 @@ class TrackStack(Stack):
         layout.addWidget(self.timeline)
         layout.setContentsMargins(0, 0, 0, 0)
         self.splitter.setSizes([w.height_ratio*1000 for w in self.widgets[1:]])
-        self.overlay.raise_()
+        for w in self.overlays: w.raise_()
 
     def wheelEvent(self,event):
         if np.abs(event.angleDelta().y()) > np.abs(event.angleDelta().x()): 
@@ -81,7 +88,7 @@ class TrackStack(Stack):
             self.update_current_range(new_range=new_range)
 
     def mouseMoveEvent(self, event):
-        t = max(self._position_to_time(event.x()),0)
+        t = np.clip(self._position_to_time(event.x()),*self.bounds)
         modifiers = QApplication.keyboardModifiers()
         if modifiers == Qt.ShiftModifier:
             self.selection_drag_move(t, 1)
@@ -92,7 +99,7 @@ class TrackStack(Stack):
 
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
-            t = max(self._position_to_time(event.x()),0)
+            t = np.clip(self._position_to_time(event.x()),*self.bounds)
             modifiers = QApplication.keyboardModifiers()
             if modifiers == Qt.ShiftModifier:
                 self.selection_drag_start(t, 1)
@@ -119,15 +126,16 @@ class TrackStack(Stack):
 
     def update_current_range(self, new_range=None):
         if new_range is not None: self.current_range = new_range
-        for child in self.widgets+[self.overlay]: 
+        for child in self.widgets+self.overlays: 
             child.update_current_range(self.current_range)
 
     def update_current_time(self, t):
-        self.overlay.markers['cursor']['time'] = t
-        self.overlay.update()
+        for w in self.widgets + self.overlays:
+            w.update_current_time(t)
+        self.current_time_marker.set_timepoint(t)
 
     def update_selected_intervals(self):
-        self.overlay.update_selected_intervals()
+        self.selection_overlay.update_selected_intervals()
 
     def center_at_time(self, t):
         target_shift = t - self._position_to_time(self.width()/2)
@@ -136,6 +144,12 @@ class TrackStack(Stack):
         shift = np.clip(target_shift, min_shift, max_shift)
         self.update_current_range(new_range=(self.current_range[0]+shift,self.current_range[1]+shift))
 
-
+    def tracks_flat(self):
+        tracks = []
+        for track in self.widgets:
+            if isinstance(track, TrackGroup):
+                tracks += list(track.tracks.values())
+            else: tracks.append(track)
+        return tracks
 
 
